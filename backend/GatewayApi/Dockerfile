@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS builder
 WORKDIR /app
 
-COPY GatewayApi.csproj ./
+COPY MediaLakeGatewayApi.csproj ./
 RUN dotnet restore MediaLakeGatewayApi.csproj
 
 COPY . ./source/
