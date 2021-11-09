@@ -290,7 +290,81 @@
 		},
 		{
 			"name": "Core",
-			"item": []
+			"item": [
+				{
+					"name": "Posts",
+					"item": [
+						{
+							"name": "Get Mine Posts",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/core/posts/mine",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"core",
+										"posts",
+										"mine"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Post",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Hello from MediaLake\",\r\n    \"content\": \"Today is a special day...\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/core/posts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"core",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
