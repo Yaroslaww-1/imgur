@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MediaLakeCore.Application.Posts.CreatePost
 {
-    public class CreatePostCommand : IRequest<PostDto>
+    public class CreatePostCommand : IRequest<PostForListDto>
     {
         public string Name { get; set; }
         public string Content { get; set; }
@@ -24,14 +24,14 @@ namespace MediaLakeCore.Application.Posts.CreatePost
         }
     }
 
-    internal class CreateChatCommandHandler : IRequestHandler<CreatePostCommand, PostDto>
+    internal class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostForListDto>
     {
         private readonly MediaLakeCoreDbContext _dbContext;
         private readonly IPostRepository _chatRepository;
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
 
-        public CreateChatCommandHandler(MediaLakeCoreDbContext dbContext, IPostRepository chatRepository, IMapper mapper, IUserContext userContext)
+        public CreatePostCommandHandler(MediaLakeCoreDbContext dbContext, IPostRepository chatRepository, IMapper mapper, IUserContext userContext)
         {
             _dbContext = dbContext;
             _chatRepository = chatRepository;
@@ -39,7 +39,7 @@ namespace MediaLakeCore.Application.Posts.CreatePost
             _userContext = userContext;
         }
 
-        public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+        public async Task<PostForListDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
             var createdBy = await _dbContext.Users
                 .WithSpecification(new UserAggregateSpecification())
@@ -50,7 +50,7 @@ namespace MediaLakeCore.Application.Posts.CreatePost
 
             await _chatRepository.AddAsync(chat);
 
-            return _mapper.Map<PostDto>(chat);
+            return _mapper.Map<PostForListDto>(chat);
         }
     }
 }

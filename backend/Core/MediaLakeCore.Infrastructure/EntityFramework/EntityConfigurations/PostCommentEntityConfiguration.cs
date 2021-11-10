@@ -1,4 +1,5 @@
-﻿using MediaLakeCore.Domain.Posts;
+﻿using MediaLakeCore.Domain.PostComments;
+using MediaLakeCore.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,6 +20,10 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
 
             entity
                 .Property(c => c.Content)
+                .IsRequired();
+
+            entity
+                .Property(c => c.PostId)
                 .IsRequired();
 
             entity

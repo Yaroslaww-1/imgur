@@ -1,9 +1,11 @@
 ﻿using MediaLakeCore.Application.Posts.CreatePost;
 using MediaLakeCore.Application.Posts.Dtos;
-using MediaLakeCore.Application.Posts.GetChats;
+using MediaLakeCore.Application.Posts.GetPostsById;
+using MediaLakeCore.Application.Posts.GetPostsList;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,17 +22,25 @@ namespace MediaLakeCore.API.Controllers.Posts
             _mediator = mediator;
         }
 
-        [HttpGet("mine")]
-        [ProducesResponseType(typeof(IEnumerable<PostDto>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<PostDto>> Create()
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PostForListDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<PostForListDto>> GetList()
         {
-            var result = await _mediator.Send(new GetAuthenticatedUserPostsQuery());
+            var result = await _mediator.Send(new GetPostsListQuery());
+            return result;
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PostByIdDto), StatusCodes.Status200OK)]
+        public async Task<PostByIdDto> GetById([FromRoute] Guid id)
+        {
+            var result = await _mediator.Send(new GetPostByIdQuery(id));
             return result;
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(PostDto), StatusCodes.Status200OK)]
-        public async Task<PostDto> Create([FromBody] CreatePostRequest request)
+        [ProducesResponseType(typeof(PostForListDto), StatusCodes.Status200OK)]
+        public async Task<PostForListDto> Create([FromBody] CreatePostRequest request)
         {
             var result = await _mediator.Send(new CreatePostCommand(request.Name, request.Content));
             return result;

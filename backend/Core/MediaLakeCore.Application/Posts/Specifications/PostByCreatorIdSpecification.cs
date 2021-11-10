@@ -2,7 +2,7 @@
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Domain.Users;
 
-namespace MediaLakeCore.Application.Chats.Specifications
+namespace MediaLakeCore.Application.Posts.Specifications
 {
     public class PostByCreatorIdSpecification : Specification<Post>
     {

@@ -1,7 +1,7 @@
 ﻿using MediaLakeCore.BuildingBlocks.Domain;
 using System;
 
-namespace MediaLakeCore.Domain.Posts
+namespace MediaLakeCore.Domain.PostComments
 {
     public class PostCommentId : TypedIdValueBase
     {

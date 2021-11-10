@@ -1,7 +1,8 @@
-﻿using MediaLakeCore.Domain.Users;
+﻿using MediaLakeCore.Domain.Posts;
+using MediaLakeCore.Domain.Users;
 using System;
 
-namespace MediaLakeCore.Domain.Posts
+namespace MediaLakeCore.Domain.PostComments
 {
     public class PostComment
     {

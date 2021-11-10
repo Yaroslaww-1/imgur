@@ -1,4 +1,4 @@
-﻿namespace MediaLakeCore.Application.Posts.Dtos
+﻿namespace MediaLakeCore.Application.PostComments.Dtos
 {
     public class PostCommentDto
     {

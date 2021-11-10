@@ -2,6 +2,7 @@
 using MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations;
 using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Domain.Posts;
+using MediaLakeCore.Domain.PostComments;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework
 {

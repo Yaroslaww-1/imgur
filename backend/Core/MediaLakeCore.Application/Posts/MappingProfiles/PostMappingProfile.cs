@@ -8,8 +8,10 @@ namespace MediaLakeCore.Application.Posts.MappingProfiles
     {
         public PostMappingProfile()
         {
-            CreateMap<PostComment, PostCommentDto>();
-            CreateMap<Post, PostDto>()
+            CreateMap<Post, PostForListDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value));
+
+            CreateMap<Post, PostByIdCreatedByDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value));
         }
     }

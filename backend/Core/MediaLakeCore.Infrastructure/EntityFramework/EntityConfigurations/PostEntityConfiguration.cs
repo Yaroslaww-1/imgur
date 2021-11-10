@@ -26,12 +26,11 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
                 .IsRequired();
 
             entity
-                .HasOne(c => c.CreatedBy);
+                .Property(c => c.Content)
+                .IsRequired();
 
             entity
-                .HasMany(c => c.Comments)
-                .WithOne()
-                .HasForeignKey("PostId");
+                .HasOne(c => c.CreatedBy);
         }
     }
 }
