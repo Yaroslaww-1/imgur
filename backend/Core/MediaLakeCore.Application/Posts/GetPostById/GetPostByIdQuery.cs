@@ -47,9 +47,9 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                         post.id AS {nameof(PostByIdDto.Id)},
                         post.name AS {nameof(PostByIdDto.Name)},
                         post.content AS {nameof(PostByIdDto.Content)},
+                        (SELECT COUNT(*) FROM post_comment WHERE post_comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
                         u.id AS {nameof(PostByIdCreatedByDto.Id)},
-                        u.name AS {nameof(PostByIdCreatedByDto.Name)},
-                        (SELECT COUNT(*) FROM post_comment WHERE post_comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)}
+                        u.name AS {nameof(PostByIdCreatedByDto.Name)}
                         FROM post
                         LEFT JOIN ""user"" u ON post.created_by_id = u.id
                         WHERE post.id = @PostId;";

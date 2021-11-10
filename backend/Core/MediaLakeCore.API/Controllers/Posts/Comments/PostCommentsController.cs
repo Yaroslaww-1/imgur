@@ -1,4 +1,5 @@
-﻿using MediaLakeCore.Application.Posts.CreatePost;
+﻿using MediaLakeCore.Application.PostComments.CreatePostComment;
+using MediaLakeCore.Application.Posts.CreatePost;
 using MediaLakeCore.Application.Posts.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -21,20 +22,12 @@ namespace MediaLakeCore.API.Controllers.Post.Comments
             _mediator = mediator;
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(typeof(IEnumerable<PostCommentDto>), StatusCodes.Status200OK)]
-        //public async Task<PostForListDto> Get([FromBody] CreatePostCommentRequest request, [FromRoute] Guid postId)
-        //{
-        //    var result = await _mediator.Send(new CreatePostCommentCommand(request.Name, request.Content));
-        //    return result;
-        //}
-
-        //[HttpPost]
-        //[ProducesResponseType(typeof(PostDto), StatusCodes.Status200OK)]
-        //public async Task<PostDto> Create([FromBody] CreatePostCommentRequest request, [FromRoute] Guid postId)
-        //{
-        //    var result = await _mediator.Send(new CreatePostCommentCommand(request.Name, request.Content));
-        //    return result;
-        //}
+        [HttpPost]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+        public async Task<Guid> Create([FromRoute] Guid postId, [FromBody] CreatePostCommentRequest request)
+        {
+            var result = await _mediator.Send(new CreatePostCommentCommand(postId, request.Content));
+            return result;
+        }
     }
 }

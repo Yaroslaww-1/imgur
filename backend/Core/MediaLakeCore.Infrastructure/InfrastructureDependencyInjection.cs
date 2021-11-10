@@ -2,8 +2,10 @@ using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.Infrastructure;
 using MediaLakeCore.BuildingBlocks.Infrastructure.Options;
+using MediaLakeCore.Domain.PostComments;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework;
+using MediaLakeCore.Infrastructure.EntityFramework.Repositories.PostComments;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework.Seeding;
 using Microsoft.AspNetCore.Builder;
@@ -54,6 +56,7 @@ namespace MediaLakeCore.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IPostCommentRepository, PostCommentRepository>();
 
             return services;
         }

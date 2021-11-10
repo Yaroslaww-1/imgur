@@ -39,8 +39,8 @@ namespace MediaLakeCore.API.Controllers.Posts
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(PostForListDto), StatusCodes.Status200OK)]
-        public async Task<PostForListDto> Create([FromBody] CreatePostRequest request)
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+        public async Task<Guid> Create([FromBody] CreatePostRequest request)
         {
             var result = await _mediator.Send(new CreatePostCommand(request.Name, request.Content));
             return result;
