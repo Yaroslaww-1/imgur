@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: users-api-postgres-volume
+spec:
+  accessModes:
+    - ReadWriteOnce  
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+      component: postgres
+  template:
+    metadata:
+      labels:
+        app: users
+        component: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:10.4
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          env:
+          - name: POSTGRES_DB
+            value: postgres
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: pa55word
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb 
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "0.2"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: users-api-postgres-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-api-postgres-service
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: users
+    component: postgres
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: users-api-postgres-virtual-service
+spec:
+  hosts:
+    - users-api-postgres-service
+  http:
+    - route:
+        - destination:
+            host: users-api-postgres-service

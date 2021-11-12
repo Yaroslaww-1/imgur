@@ -40,8 +40,6 @@ namespace MediaLakeCore
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UsePathBase(new PathString("/api"));
-
             app.UseRouting();
 
             app.UseAuthentication();

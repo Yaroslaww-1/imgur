@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-api-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 8200
+  selector:
+    app: users
+    component: api
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: users-api-virtual-service
+spec:
+  hosts:
+    - users-api-service
+  http:
+    - route:
+        - destination:
+            host: users-api-service

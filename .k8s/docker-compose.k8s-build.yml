@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  # Gateway API
+  media_lake_gateway_api:
+    container_name: media_lake_gateway_api
+    build: 
+      context: ../backend/GatewayApi
+    restart: on-failure
+
+  # Users API
+  media_lake_users_api:
+    container_name: media_lake_users_api
+    build: 
+      context: ../backend/Users
+    restart: on-failure
+
+  # Core API
+  media_lake_core_api:
+    container_name: media_lake_core_api
+    build: 
+      context: ../backend/Core
+    restart: on-failure
