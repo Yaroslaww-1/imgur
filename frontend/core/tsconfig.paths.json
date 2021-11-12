@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@api/*": ["./api/*"],
+      "@common/*": ["./common/*"],
       "@components/*": ["./components/*"]
     }
   }
