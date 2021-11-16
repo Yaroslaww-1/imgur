@@ -29,6 +29,10 @@ spec:
               value: http://0.0.0.0:8100
             - name: DatabaseOptions__ConnectionString
               value: Host=core-api-postgres-service;Port=5432;Database=postgres;Username=postgres;Password=pa55word
+            - name: KafkaOptions__BootstrapServers
+              value: kafka-service:9000
+            - name: KafkaOptions__GroupId
+              value: media-lake-core
           resources:
             limits:
               memory: 512Mi

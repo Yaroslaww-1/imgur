@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui-service
+  labels:
+    name: kafka-ui-service
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: kafka-ui
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kafka-ui-virtual-service
+spec:
+  hosts:
+    - kafka-ui-service
+  http:
+    - route:
+        - destination:
+            host: kafka-ui-service

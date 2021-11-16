@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui
+          image: provectuslabs/kafka-ui:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: local
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: kafka-service:9092
+            - name: KAFKA_CLUSTERS_0_ZOOKEEPER
+              value: zookeeper-service:2181
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: /kafkaui
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "0.2"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"

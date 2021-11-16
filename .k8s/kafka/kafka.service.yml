@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+  labels:
+    name: kafka-service
+spec:
+  ports:
+    - port: 9092
+      name: kafka-internal
+    - port: 9000
+      name: kafka-client
+  selector:
+    app: kafka
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kafka-virtual-service
+spec:
+  hosts:
+    - kafka-service
+  http:
+    - route:
+        - destination:
+            host: kafka-service
