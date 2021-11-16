@@ -29,6 +29,47 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"accessToken\", jsonData.access_token);\r",
+											"pm.globals.set(\"accessToken\", jsonData.access_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user7@gmail.com\",\r\n    \"name\": \"user@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"roles\": [\"User\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"users"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -295,7 +336,58 @@
 					"name": "Posts",
 					"item": [
 						{
-							"name": "Get Mine Posts",
+							"name": "Comments",
+							"item": [
+								{
+									"name": "Create Post Comment",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"content\": \"Great post!\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/core/posts/:postId/comments",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"core",
+												"posts",
+												":postId",
+												"comments"
+											],
+											"variable": [
+												{
+													"key": "postId",
+													"value": "b91f5e20-d841-4a62-97c7-88fb43d318e8"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get Posts",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -310,7 +402,36 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/core/posts/mine",
+									"raw": "{{baseUrl}}/api/core/posts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"core",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Post By Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/core/posts/:postId",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -318,7 +439,13 @@
 										"api",
 										"core",
 										"posts",
-										"mine"
+										":postId"
+									],
+									"variable": [
+										{
+											"key": "postId",
+											"value": "b91f5e20-d841-4a62-97c7-88fb43d318e8"
+										}
 									]
 								}
 							},
@@ -357,6 +484,40 @@
 										"api",
 										"core",
 										"posts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Get Users",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/core/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"core",
+										"users"
 									]
 								}
 							},
