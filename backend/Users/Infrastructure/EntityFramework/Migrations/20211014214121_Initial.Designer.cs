@@ -9,7 +9,7 @@ using MediaLakeUsers.Infrastructure.EntityFramework;
 
 namespace MediaLakeUsers.Infrastructure.EntityFramework.Migrations
 {
-    [DbContext(typeof(UsersDbContext))]
+    [DbContext(typeof(MediaLakeUsersDbContext))]
     [Migration("20211014214121_Initial")]
     partial class Initial
     {

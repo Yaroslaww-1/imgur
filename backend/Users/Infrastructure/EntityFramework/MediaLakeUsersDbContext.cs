@@ -4,13 +4,13 @@ using MediaLakeUsers.Infrastructure.EntityFramework.EntityConfigurations;
 
 namespace MediaLakeUsers.Infrastructure.EntityFramework
 {
-    public class UsersDbContext : DbContext
+    public class MediaLakeUsersDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
 
         public DbSet<Role> Roles { get; set; }
 
-        public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) { }
+        public MediaLakeUsersDbContext(DbContextOptions<MediaLakeUsersDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

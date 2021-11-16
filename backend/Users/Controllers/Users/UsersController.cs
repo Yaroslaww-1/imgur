@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediaLakeUsers.Services.Users;
+using System;
+using MediaLakeUsers.Controllers.Users;
 
 namespace MediaLakeUsers.Controllers
 {
@@ -22,6 +24,13 @@ namespace MediaLakeUsers.Controllers
         public async Task<IEnumerable<UserDto>> Get()
         {
             return await _userService.GetAllUsers();
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+        public async Task<Guid> Create([FromBody] CreateUserRequest request)
+        {
+            return await _userService.CreateUser(request.Email, request.Name, request.Password, request.Roles);
         }
     }
 }

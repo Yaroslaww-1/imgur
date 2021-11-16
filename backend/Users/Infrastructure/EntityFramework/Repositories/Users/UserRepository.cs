@@ -8,9 +8,9 @@ namespace MediaLakeUsers.Infrastructure.EntityFramework.Repositories.Users
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UsersDbContext _dbContext;
+        private readonly MediaLakeUsersDbContext _dbContext;
 
-        public UserRepository(UsersDbContext dbContext)
+        public UserRepository(MediaLakeUsersDbContext dbContext)
         {
             _dbContext = dbContext;
         }

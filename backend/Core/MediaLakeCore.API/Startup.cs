@@ -51,6 +51,8 @@ namespace MediaLakeCore
             });
 
             app.ConfigureInfrastructure();
+
+            app.ConfigureApplication();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MediaLakeUsers.Infrastructure.EventBus.Integration
+namespace MediaLakeCore.Infrastructure.EventBus.Integration
 {
     public interface IIntegrationEventHandler<in TIntegrationEvent> : IIntegrationEventHandler
         where TIntegrationEvent : IntegrationEvent

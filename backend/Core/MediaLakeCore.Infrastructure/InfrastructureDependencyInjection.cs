@@ -4,10 +4,14 @@ using MediaLakeCore.BuildingBlocks.Infrastructure;
 using MediaLakeCore.BuildingBlocks.Infrastructure.Options;
 using MediaLakeCore.Domain.PostComments;
 using MediaLakeCore.Domain.Posts;
+using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Infrastructure.EntityFramework;
+using MediaLakeCore.Infrastructure.EntityFramework.Repositories;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories.PostComments;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework.Seeding;
+using MediaLakeCore.Infrastructure.EventBus.Integration;
+using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +23,7 @@ namespace MediaLakeCore.Infrastructure
 {
     public static class InfrastructureDependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions(configuration);
             services.AddDatabaseContext(configuration);
@@ -27,10 +31,10 @@ namespace MediaLakeCore.Infrastructure
             services.AddRepositories();
             services.AddUserContext();
 
-            return services;
+            services.AddIntegrationEventBus();
         }
 
-        public static IApplicationBuilder ConfigureInfrastructure(this IApplicationBuilder app, bool migrate = true, bool seed = true)
+        public static void ConfigureInfrastructure(this IApplicationBuilder app, bool migrate = true, bool seed = true)
         {
             if (migrate)
             {
@@ -41,36 +45,36 @@ namespace MediaLakeCore.Infrastructure
             {
                 SeedDatabase(app);
             }
-
-            return app;
         }
 
-        private static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
+        private static void AddOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Location));
             services.Configure<UrlsOptions>(configuration.GetSection(UrlsOptions.Location));
-
-            return services;
+            services.Configure<KafkaOptions>(configuration.GetSection(KafkaOptions.Location));
         }
 
-        private static IServiceCollection AddRepositories(this IServiceCollection services)
+        private static void AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IPostCommentRepository, PostCommentRepository>();
-
-            return services;
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
-        private static IServiceCollection AddUserContext(this IServiceCollection services)
+        private static void AddUserContext(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
             services.AddSingleton<IUserContext, UserContext>();
-
-            return services;
         }
 
-        private static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
+        private static void AddIntegrationEventBus(this IServiceCollection services)
+        {
+            services.AddSingleton<KafkaConnectionFactory>();
+            services.AddSingleton<IIntegrationEventBus, KafkaIntegrationEventBus>();
+        }
+
+        private static void AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
             var databaseOptions = configuration.GetSection(DatabaseOptions.Location).Get<DatabaseOptions>();
 
@@ -86,8 +90,6 @@ namespace MediaLakeCore.Infrastructure
 
                 options.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
             });
-
-            return services;
         }
 
 		public static void MigrateDatabase(IApplicationBuilder app)

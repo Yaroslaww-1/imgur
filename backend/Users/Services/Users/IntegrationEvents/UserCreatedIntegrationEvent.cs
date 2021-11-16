@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MediaLakeUsers.Entities;
 using MediaLakeUsers.Infrastructure.EventBus.Integration;
 
 namespace MediaLakeUsers.Services.Users.IntegrationEvents
@@ -12,7 +13,7 @@ namespace MediaLakeUsers.Services.Users.IntegrationEvents
         public List<string> Roles { get; set; }
 
         public UserCreatedIntegrationEvent(Guid userId, string name, string email, List<string> roles)
-            :base(Guid.NewGuid(), DateTime.Now)
+            :base(Guid.NewGuid(), DateTime.Now, nameof(User))
         {
             UserId = userId;
             Name = name;

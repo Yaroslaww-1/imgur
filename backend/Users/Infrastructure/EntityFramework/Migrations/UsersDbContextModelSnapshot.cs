@@ -8,7 +8,7 @@ using MediaLakeUsers.Infrastructure.EntityFramework;
 
 namespace MediaLakeUsers.Infrastructure.EntityFramework.Migrations
 {
-    [DbContext(typeof(UsersDbContext))]
+    [DbContext(typeof(MediaLakeUsersDbContext))]
     partial class UsersDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -18,12 +18,12 @@ namespace MediaLakeUsers.Services.Auth
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly UsersDbContext _dbContext;
+        private readonly MediaLakeUsersDbContext _dbContext;
         private readonly ISecurityService _securityService;
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly IUserRepository _userRepository;
 
-        public AuthenticationService(UsersDbContext dbContext, ISecurityService securityService, IExecutionContextAccessor executionContextAccessor, IUserRepository userRepository)
+        public AuthenticationService(MediaLakeUsersDbContext dbContext, ISecurityService securityService, IExecutionContextAccessor executionContextAccessor, IUserRepository userRepository)
         {
             _dbContext = dbContext;
             _securityService = securityService;

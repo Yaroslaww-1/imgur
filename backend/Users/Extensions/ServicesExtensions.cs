@@ -19,7 +19,7 @@ using MediaLakeUsers.Entities;
 using MediaLakeUsers.Infrastructure.EntityFramework;
 using MediaLakeUsers.Infrastructure.EntityFramework.Repositories.Users;
 using MediaLakeUsers.Infrastructure.EventBus.Integration;
-using MediaLakeUsers.Infrastructure.EventBus.Integration.RabbitMQ;
+using MediaLakeUsers.Infrastructure.EventBus.Integration.Kafka;
 using MediaLakeUsers.Infrastructure.IdentityServer;
 using MediaLakeUsers.Options;
 using MediaLakeUsers.Services.Auth;
@@ -32,16 +32,16 @@ namespace MediaLakeUsers.Extensions
 		public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Location));
-			services.Configure<RabbitMQOptions>(configuration.GetSection(RabbitMQOptions.Location));
+			services.Configure<KafkaOptions>(configuration.GetSection(KafkaOptions.Location));
 		}
 
 		public static void RegisterDatabase(this IServiceCollection services, IConfiguration configuration)
         {
 			var databaseOptions = configuration.GetSection(DatabaseOptions.Location).Get<DatabaseOptions>();
 
-			var migrationAssembly = typeof(UsersDbContext).Assembly.GetName().Name;
+			var migrationAssembly = typeof(MediaLakeUsersDbContext).Assembly.GetName().Name;
 
-			services.AddDbContext<UsersDbContext>(options =>
+			services.AddDbContext<MediaLakeUsersDbContext>(options =>
 				options
 					.UseNpgsql(
 						databaseOptions.ConnectionString,
@@ -57,8 +57,8 @@ namespace MediaLakeUsers.Extensions
 
 		public static void RegisterEventBus(this IServiceCollection services)
         {
-			services.AddSingleton<RabbitMQConnectionFactory>();
-			services.AddSingleton<IIntegrationEventBus, RabbitMQIntegrationEventBus>();
+			services.AddSingleton<KafkaConnectionFactory>();
+			services.AddSingleton<IIntegrationEventBus, KafkaIntegrationEventBus>();
         }
 
 		public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
@@ -137,7 +137,7 @@ namespace MediaLakeUsers.Extensions
 		{
 			using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
 			{
-				using var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+				using var context = scope.ServiceProvider.GetRequiredService<MediaLakeUsersDbContext>();
 				context.Database.Migrate();
 			};
 		}
@@ -152,7 +152,7 @@ namespace MediaLakeUsers.Extensions
 		{
 			using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
 			{
-				using var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+				using var context = scope.ServiceProvider.GetRequiredService<MediaLakeUsersDbContext>();
 
 				var existingRoles = context.Roles.ToList();
 
@@ -171,7 +171,7 @@ namespace MediaLakeUsers.Extensions
 		{
 			using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
 			{
-				using var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+				using var context = scope.ServiceProvider.GetRequiredService<MediaLakeUsersDbContext>();
 
 				var userService = scope.ServiceProvider.GetRequiredService<UserService>();
 
@@ -181,14 +181,14 @@ namespace MediaLakeUsers.Extensions
 
 				if (!existingUsers.Any())
 				{
-					await userService.CreateUser(
+					await userService.InitializeUser(
 							new Guid("22222222-2222-2222-2222-222222222222"),
 							"user@gmail.com",
 							"User",
 							"userPass",
 							existingRoles.Where(r => r.Name == "User").ToList());
 
-					await userService.CreateUser(
+					await userService.InitializeUser(
 							new Guid("11111111-1111-1111-1111-111111111111"),
 							"admin@gmail.com",
 							"Admin",

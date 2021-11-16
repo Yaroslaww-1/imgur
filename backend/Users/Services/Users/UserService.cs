@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediaLakeUsers.BuildingBlocks.Security;
 using MediaLakeUsers.Entities;
+using MediaLakeUsers.Infrastructure.EntityFramework;
 using MediaLakeUsers.Infrastructure.EntityFramework.Repositories.Users;
 using MediaLakeUsers.Infrastructure.EventBus.Integration;
 using MediaLakeUsers.Services.Users.IntegrationEvents;
+using Microsoft.EntityFrameworkCore;
 
 namespace MediaLakeUsers.Services.Users
 {
@@ -15,12 +17,14 @@ namespace MediaLakeUsers.Services.Users
         private readonly IUserRepository _userRepository;
         private readonly ISecurityService _securityService;
         private readonly IIntegrationEventBus _integrationEventBus;
+        private readonly MediaLakeUsersDbContext _dbContext;
 
-        public UserService(IUserRepository userRepository, ISecurityService securityService, IIntegrationEventBus integrationEventBus)
+        public UserService(IUserRepository userRepository, ISecurityService securityService, IIntegrationEventBus integrationEventBus, MediaLakeUsersDbContext dbContext)
         {
             _userRepository = userRepository;
             _securityService = securityService;
             _integrationEventBus = integrationEventBus;
+            _dbContext = dbContext;
         }
 
         public async Task<IList<UserDto>> GetAllUsers()
@@ -38,7 +42,7 @@ namespace MediaLakeUsers.Services.Users
                 .ToList();
         }
 
-        public async Task CreateUser(
+        public async Task InitializeUser(
             Guid id,
             string email,
             string name,
@@ -57,6 +61,28 @@ namespace MediaLakeUsers.Services.Users
             await _userRepository.CreateUser(user);
 
             await _integrationEventBus.Publish(new UserCreatedIntegrationEvent(user.Id, user.Name, user.Email, roles.Select(r => r.Name).ToList()));
+        }
+
+        public async Task<Guid> CreateUser(
+            string email,
+            string name,
+            string password,
+            List<string> roles)
+        {
+            var userRoles = await _dbContext.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
+
+            var user = User.CreateNew(
+                email,
+                name,
+                password,
+                userRoles,
+                _securityService);
+
+            await _userRepository.CreateUser(user);
+
+            await _integrationEventBus.Publish(new UserCreatedIntegrationEvent(user.Id, user.Name, user.Email, user.Roles.Select(r => r.Name).ToList()));
+
+            return user.Id;
         }
     }
 }
