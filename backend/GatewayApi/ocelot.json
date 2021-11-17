@@ -1,0 +1,54 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{path}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{Core}"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/core/{path}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "UserEmail": "Claims[email] > value > |",
+        "UserName": "Claims[name] > value > |",
+        "UserRoles": "Claims[roles] > value > |",
+        "UserId": "Claims[userid] > value > |"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/authenticatedUser",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{Users}"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/authenticatedUser",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "email": "Claims[email] > value > |"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/{path}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "{Users}"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/{path}"
+    }
+  ],
+  "GlobalConfiguration": {
+      "BaseUrl": "http://localhost:8000"
+  }
+}

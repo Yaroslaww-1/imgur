@@ -1,0 +1,36 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: gateway-api
+      component: api
+  template:
+    metadata:
+      labels:
+        app: gateway-api
+        component: api
+    spec:
+      containers:
+        - image: k8s_media_lake_gateway_api:latest
+          imagePullPolicy: Never
+          name: gateway-api
+          ports:
+            - containerPort: 8000
+          env:
+            - name: Services__Hosts__Core
+              value: http://core-api-service
+            - name: Services__Hosts__Users
+              value: http://users-api-service
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "0.2"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
