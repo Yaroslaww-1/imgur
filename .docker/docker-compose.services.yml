@@ -1,0 +1,125 @@
+version: '3.4'
+
+services:
+  # Databases
+  media_lake_core_db:
+    container_name: media_lake_learn_db
+    image: postgres:13.4
+    restart: on-failure
+    ports:
+      - 7433:5432
+    networks:
+      - media-lake-core-network
+    env_file:
+      - ../.env/core.env
+    volumes:
+      - media-lake-core-db-data:/var/lib/postgresql/data
+
+  media_lake_users_db:
+    image: postgres:13.4
+    container_name: media_lake_users_db
+    restart: on-failure
+    ports:
+      - 7434:5432
+    networks:
+      - media-lake-users-network
+    env_file:
+      - ../.env/users.env
+    volumes:
+      - media-lake-users-db-data:/var/lib/postgresql/data
+
+  # Kafka
+  media_lake_kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: media_lake_kafka
+    depends_on:
+      - media_lake_kafka_zookeeper
+    ports:
+      - 9092:9092
+      - 9000:9000
+    networks:
+      - media-lake-users-network
+      - media-lake-core-network
+      - media-lake-kafka-network
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: media_lake_kafka_zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://media_lake_kafka:9092,CONNECTIONS_FROM_HOST://localhost:9000
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONNECTIONS_FROM_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  media_lake_kafka_zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: media_lake_kafka_zookeeper
+    ports:
+      - 9001:2181
+    networks:
+      - media-lake-kafka-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  media_lake_kafka_ui:
+    image: provectuslabs/kafka-ui
+    container_name: media_lake_kafka_ui
+    restart: on-failure
+    ports:
+      - 9002:8080
+    networks:
+      - media-lake-kafka-network
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=media_lake_kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=media_lake_kafka_zookeeper:2181
+
+  # Gateway API
+  media_lake_gateway_api:
+    container_name: media_lake_gateway_api
+    build: 
+      context: ../backend/GatewayApi
+    restart: on-failure
+    ports:
+      - 8000:8000
+    networks:
+      - media-lake-core-network
+      - media-lake-users-network
+    links:
+      - media_lake_users_api:media-lake-users-api
+    environment:
+      - Services__Hosts__Core=http://host.docker.internal:8100
+      - Services__Hosts__Users=http://media-lake-users-api:8200
+
+  # Users API
+  media_lake_users_api:
+    container_name: media_lake_users_api
+    build: 
+      context: ../backend/Users
+    restart: on-failure
+    depends_on:
+      - media_lake_kafka
+      - media_lake_users_db
+    ports:
+      - 8200:8200
+    networks:
+      - media-lake-users-network
+    environment:
+      - UrlsOptions__GatewayApiUrl=http://localhost:8200
+      - ASPNETCORE_URLS=http://0.0.0.0:8200
+      - KafkaOptions__BootstrapServers=media_lake_kafka:9092
+    env_file:
+      - ../.env/users.env
+  
+volumes:
+  media-lake-core-db-data:
+    driver: local
+  media-lake-users-db-data:
+    driver: local
+
+networks:
+  media-lake-core-network:
+    driver: bridge
+  media-lake-users-network:
+    driver: bridge
+  media-lake-kafka-network:
+    driver: bridge
