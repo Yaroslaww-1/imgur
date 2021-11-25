@@ -25,7 +25,7 @@ export const CreatePost: React.FC = () => {
 
   return (
     <Page>
-      <div className={styles.header}>
+      <div className={styles.topic}>
         <h1>Create post</h1>
       </div>
       <form className={styles.form} onSubmit={onSubmit} ref={form}>
