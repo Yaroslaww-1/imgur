@@ -2,6 +2,7 @@
 using AutoMapper;
 using Dapper;
 using MediaLakeCore.Application.Posts.Dtos;
+using MediaLakeCore.Application.Posts.Exceptions;
 using MediaLakeCore.Application.Posts.Specifications;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.Domain.Posts;
@@ -39,7 +40,7 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
             _userContext = userContext;
         }
 
-        public async Task<PostByIdDto> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+        public async Task<PostByIdDto> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
         {
             using var connection = _dbContext.Database.GetDbConnection();
 
@@ -55,7 +56,7 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                         WHERE post.id = @PostId;";
 
             var parameters = new DynamicParameters();
-            parameters.Add(nameof(PostId), request.PostId);
+            parameters.Add(nameof(PostId), query.PostId);
 
             var posts = await connection.QueryAsync<PostByIdDto, PostByIdCreatedByDto, PostByIdDto>(
                 sql,
@@ -64,7 +65,12 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                 param: parameters
             );
 
-            var post = posts.First();
+            var post = posts.FirstOrDefault();
+
+            if (post == null)
+            {
+                throw new PostNotFoundException(new PostId(query.PostId));
+            }
 
             return post;
         }
