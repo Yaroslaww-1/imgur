@@ -1,5 +1,4 @@
-﻿using MediaLakeCore.Application.Users.Dtos;
-using MediaLakeCore.Application.Users.GetUsers;
+﻿using MediaLakeCore.Application.Users.GetUsersList;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +19,10 @@ namespace MediaLakeCore.API.Users.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserDto>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<UserDto>> GetAll()
+        [ProducesResponseType(typeof(IEnumerable<UsersListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<UsersListItemDto>> GetAll()
         {
-            var result = await _mediator.Send(new GetUsersQuery());
+            var result = await _mediator.Send(new GetUsersListQuery());
             return result;
         }
     }

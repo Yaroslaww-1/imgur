@@ -1,11 +1,9 @@
 ﻿using MediaLakeCore.Application.PostComments.CreatePostComment;
-using MediaLakeCore.Application.Posts.CreatePost;
-using MediaLakeCore.Application.Posts.Dtos;
+using MediaLakeCore.Application.PostComments.GetPostCommentsList;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,6 +18,14 @@ namespace MediaLakeCore.API.Controllers.Post.Comments
         public PostCommentsController(ISender mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PostCommentsListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<PostCommentsListItemDto>> GetList([FromRoute] Guid postId)
+        {
+            var result = await _mediator.Send(new GetPostCommentsListQuery(postId));
+            return result;
         }
 
         [HttpPost]

@@ -23,8 +23,8 @@ namespace MediaLakeCore.API.Controllers.Posts
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<PostForListDto>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<PostForListDto>> GetList()
+        [ProducesResponseType(typeof(IEnumerable<PostsListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<PostsListItemDto>> GetList()
         {
             var result = await _mediator.Send(new GetPostsListQuery());
             return result;
