@@ -8,5 +8,7 @@ namespace MediaLakeCore.Application.Posts.GetPostsList
         public string Name { get; set; }
         public string Content { get; set; }
         public int CommentsCount { get; set; }
+        public int LikesCount { get; set; }
+        public int DislikesCount { get; set; }
     }
 }

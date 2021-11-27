@@ -3,6 +3,7 @@ using MediaLakeCore.BuildingBlocks.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.Infrastructure;
 using MediaLakeCore.BuildingBlocks.Infrastructure.Options;
 using MediaLakeCore.Domain.PostComments;
+using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Infrastructure.EntityFramework;
@@ -59,6 +60,7 @@ namespace MediaLakeCore.Infrastructure
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IPostCommentRepository, PostCommentRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPostReactionRepository, PostReactionRepository>();
         }
 
         private static void AddUserContext(this IServiceCollection services)

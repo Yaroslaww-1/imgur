@@ -49,20 +49,22 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                         post.name AS {nameof(PostByIdDto.Name)},
                         post.content AS {nameof(PostByIdDto.Content)},
                         (SELECT COUNT(*) FROM post_comment WHERE post_comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
+                        (SELECT COUNT(*) FROM post_reaction post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS {nameof(PostByIdDto.LikesCount)},
+                        (SELECT COUNT(*) FROM post_reaction post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS {nameof(PostByIdDto.DislikesCount)},
                         u.id AS {nameof(PostByIdCreatedByDto.Id)},
                         u.name AS {nameof(PostByIdCreatedByDto.Name)}
                         FROM post
                         LEFT JOIN ""user"" u ON post.created_by_id = u.id
                         WHERE post.id = @PostId;";
 
-            var parameters = new DynamicParameters();
-            parameters.Add(nameof(PostId), query.PostId);
-
             var posts = await connection.QueryAsync<PostByIdDto, PostByIdCreatedByDto, PostByIdDto>(
                 sql,
                 (post, createdBy) => { post.CreatedBy = createdBy; return post; },
                 splitOn: "Id,Id",
-                param: parameters
+                param: new
+                {
+                    PostId = query.PostId
+                }
             );
 
             var post = posts.FirstOrDefault();

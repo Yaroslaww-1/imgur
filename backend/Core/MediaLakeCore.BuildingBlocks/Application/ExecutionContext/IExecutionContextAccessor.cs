@@ -4,6 +4,7 @@ namespace MediaLakeCore.BuildingBlocks.ExecutionContext
 {
     public interface IExecutionContextAccessor
     {
-        string Email { get; }
+        public string Email { get; }
+        public Guid UserId { get; }
     }
 }

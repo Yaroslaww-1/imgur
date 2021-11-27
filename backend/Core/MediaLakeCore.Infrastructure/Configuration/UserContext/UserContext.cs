@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.BuildingBlocks.ExecutionContext;
+using System;
 
 namespace MediaLakeCore.BuildingBlocks.Application.ExecutionContext
 {
@@ -12,5 +13,7 @@ namespace MediaLakeCore.BuildingBlocks.Application.ExecutionContext
 		}
 
 		public string Email => new(_executionContextAccessor.Email);
-    }
+
+        public Guid UserId => _executionContextAccessor.UserId;
+	}
 }

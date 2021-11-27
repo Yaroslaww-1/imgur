@@ -34,6 +34,27 @@ namespace MediaLakeCore.BuildingBlocks.ExecutionContext
             }
         }
 
+        public Guid UserId
+        {
+            get
+            {
+                if ((bool)(_httpContextAccessor
+                    .HttpContext?
+                    .Request?
+                    .Headers?
+                    .ContainsKey("UserId")))
+                {
+                    return Guid.Parse(_httpContextAccessor
+                        .HttpContext?
+                        .Request?
+                        .Headers?
+                        ["UserId"]);
+                }
+
+                throw new ApplicationException("User context is not available");
+            }
+        }
+
         public bool IsAvailable => _httpContextAccessor.HttpContext != null;
     }
 }
