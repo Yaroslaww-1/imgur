@@ -1,6 +1,6 @@
 ﻿namespace MediaLakeCore.API.Controllers.Post.Comments
 {
-    public class CreatePostCommentRequest
+    public class CreateCommentRequest
     {
         public string Content { get; set; }
     }

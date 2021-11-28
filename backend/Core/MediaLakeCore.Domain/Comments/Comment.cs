@@ -2,31 +2,31 @@
 using MediaLakeCore.Domain.Users;
 using System;
 
-namespace MediaLakeCore.Domain.PostComments
+namespace MediaLakeCore.Domain.Comments
 {
-    public class PostComment
+    public class Comment
     {
-        public PostCommentId Id { get; private set; }
+        public CommentId Id { get; private set; }
         public PostId PostId { get; private set; }
         public User CreatedBy { get; private set; }
         public string Content { get; private set; }
 
-        private PostComment()
+        private Comment()
         {
             // Only for EF
         }
 
-        private PostComment(User createdBy, PostId postId, string content)
+        private Comment(User createdBy, PostId postId, string content)
         {
-            Id = new PostCommentId(Guid.NewGuid());
+            Id = new CommentId(Guid.NewGuid());
             CreatedBy = createdBy;
             PostId = postId;
             Content = content;
         }
 
-        public static PostComment CreateNew(User user, PostId postId, string content)
+        public static Comment CreateNew(User user, PostId postId, string content)
         {
-            return new PostComment(user, postId, content);
+            return new Comment(user, postId, content);
         }
     }
 }

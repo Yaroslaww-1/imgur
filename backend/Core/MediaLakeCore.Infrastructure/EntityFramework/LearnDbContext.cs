@@ -2,8 +2,8 @@
 using MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations;
 using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Domain.Posts;
-using MediaLakeCore.Domain.PostComments;
 using MediaLakeCore.Domain.PostReactions;
+using MediaLakeCore.Domain.Comments;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework
 {
@@ -12,7 +12,7 @@ namespace MediaLakeCore.Infrastructure.EntityFramework
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<PostComment> PostComments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
 
         public MediaLakeCoreDbContext() : base() { }

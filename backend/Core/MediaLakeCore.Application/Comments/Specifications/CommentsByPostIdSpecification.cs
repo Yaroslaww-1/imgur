@@ -1,10 +1,10 @@
 ﻿using Ardalis.Specification;
-using MediaLakeCore.Domain.PostComments;
+using MediaLakeCore.Domain.Comments;
 using MediaLakeCore.Domain.Posts;
 
-namespace MediaLakeCore.Application.PostComments.Specifications
+namespace MediaLakeCore.Application.Comments.Specifications
 {
-    public class CommentsByPostIdSpecification : Specification<PostComment>
+    public class CommentsByPostIdSpecification : Specification<Comment>
     {
         public CommentsByPostIdSpecification(PostId postId)
         {

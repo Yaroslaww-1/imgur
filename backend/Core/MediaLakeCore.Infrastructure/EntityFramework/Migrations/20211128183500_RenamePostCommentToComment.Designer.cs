@@ -3,15 +3,17 @@ using System;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(MediaLakeCoreDbContext))]
-    partial class MediaLakeCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211128183500_RenamePostCommentToComment")]
+    partial class RenamePostCommentToComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

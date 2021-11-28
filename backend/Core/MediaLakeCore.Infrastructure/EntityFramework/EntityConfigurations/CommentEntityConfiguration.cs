@@ -1,15 +1,14 @@
-﻿using MediaLakeCore.Domain.PostComments;
-using MediaLakeCore.Domain.Posts;
+﻿using MediaLakeCore.Domain.Comments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
 {
-    public class PostCommentEntityConfiguration : IEntityTypeConfiguration<PostComment>
+    public class CommentEntityConfiguration : IEntityTypeConfiguration<Comment>
     {
-        public void Configure(EntityTypeBuilder<PostComment> entity)
+        public void Configure(EntityTypeBuilder<Comment> entity)
         {
-            entity.ToTable("post_comment");
+            entity.ToTable("comment");
 
             entity
                 .Property(cm => cm.Id)

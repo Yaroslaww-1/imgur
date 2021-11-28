@@ -1,9 +1,8 @@
 ﻿using Ardalis.Specification.EntityFrameworkCore;
 using AutoMapper;
-using MediaLakeCore.Application.Posts.Dtos;
 using MediaLakeCore.Application.Users.Specifications;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
-using MediaLakeCore.Domain.PostComments;
+using MediaLakeCore.Domain.Comments;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using MediatR;
@@ -12,44 +11,44 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MediaLakeCore.Application.PostComments.CreatePostComment
+namespace MediaLakeCore.Application.Comments.CreateComment
 {
-    public class CreatePostCommentCommand : IRequest<Guid>
+    public class CreateCommentCommand : IRequest<Guid>
     {
         public Guid PostId { get; set; }
         public string Content { get; set; }
 
-        public CreatePostCommentCommand(Guid postId, string content)
+        public CreateCommentCommand(Guid postId, string content)
         {
             PostId = postId;
             Content = content;
         }
     }
 
-    internal class CreatePostCommentCommandHandler : IRequestHandler<CreatePostCommentCommand, Guid>
+    internal class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, Guid>
     {
         private readonly MediaLakeCoreDbContext _dbContext;
-        private readonly IPostCommentRepository _postCommentRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
 
-        public CreatePostCommentCommandHandler(MediaLakeCoreDbContext dbContext, IPostCommentRepository postCommentRepository, IMapper mapper, IUserContext userContext)
+        public CreateCommentCommandHandler(MediaLakeCoreDbContext dbContext, ICommentRepository commentRepository, IMapper mapper, IUserContext userContext)
         {
             _dbContext = dbContext;
-            _postCommentRepository = postCommentRepository;
+            _commentRepository = commentRepository;
             _mapper = mapper;
             _userContext = userContext;
         }
 
-        public async Task<Guid> Handle(CreatePostCommentCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
             var createdBy = await _dbContext.Users
                 .WithSpecification(new UserByEmailSpecification(_userContext.Email))
                 .FirstAsync();
 
-            var comment = PostComment.CreateNew(createdBy, new PostId(request.PostId), request.Content);
+            var comment = Comment.CreateNew(createdBy, new PostId(request.PostId), request.Content);
 
-            await _postCommentRepository.AddAsync(comment);
+            await _commentRepository.AddAsync(comment);
 
             return comment.Id.Value;
         }
