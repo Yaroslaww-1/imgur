@@ -14,6 +14,8 @@ namespace MediaLakeCore.Application.Posts.Dtos
         public string Name { get; set; }
         public string Content { get; set; }
         public int CommentsCount { get; set; }
+        public int LikesCount { get; set; }
+        public int DislikesCount { get; set; }
         public PostByIdCreatedByDto CreatedBy { get; set; }
     }
 }

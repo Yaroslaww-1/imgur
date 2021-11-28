@@ -2,12 +2,13 @@ using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.Infrastructure;
 using MediaLakeCore.BuildingBlocks.Infrastructure.Options;
-using MediaLakeCore.Domain.PostComments;
+using MediaLakeCore.Domain.CommentReactions;
+using MediaLakeCore.Domain.Comments;
+using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories;
-using MediaLakeCore.Infrastructure.EntityFramework.Repositories.PostComments;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework.Seeding;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
@@ -57,8 +58,10 @@ namespace MediaLakeCore.Infrastructure
         private static void AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<IPostRepository, PostRepository>();
-            services.AddTransient<IPostCommentRepository, PostCommentRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPostReactionRepository, PostReactionRepository>();
+            services.AddTransient<ICommentReactionRepository, CommentReactionRepository>();
         }
 
         private static void AddUserContext(this IServiceCollection services)

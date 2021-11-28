@@ -19,6 +19,82 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+            modelBuilder.Entity("MediaLakeCore.Domain.CommentReactions.CommentReaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("comment_id");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("IsLike")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_like");
+
+                    b.HasKey("Id")
+                        .HasName("pk_comment_reaction");
+
+                    b.ToTable("comment_reaction");
+                });
+
+            modelBuilder.Entity("MediaLakeCore.Domain.Comments.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by_id");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_comment");
+
+                    b.HasIndex("CreatedById")
+                        .HasDatabaseName("ix_comment_created_by_id");
+
+                    b.ToTable("comment");
+                });
+
+            modelBuilder.Entity("MediaLakeCore.Domain.PostReactions.PostReaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("IsLike")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_like");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_post_reaction");
+
+                    b.ToTable("post_reaction");
+                });
+
             modelBuilder.Entity("MediaLakeCore.Domain.Posts.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -46,37 +122,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                         .HasDatabaseName("ix_post_created_by_id");
 
                     b.ToTable("post");
-                });
-
-            modelBuilder.Entity("MediaLakeCore.Domain.Posts.PostComment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("content");
-
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uuid")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("post_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_post_comment");
-
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_post_comment_created_by_id");
-
-                    b.HasIndex("PostId")
-                        .HasDatabaseName("ix_post_comment_post_id");
-
-                    b.ToTable("post_comment");
                 });
 
             modelBuilder.Entity("MediaLakeCore.Domain.Users.Role", b =>
@@ -145,27 +190,22 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                     b.ToTable("user_role");
                 });
 
+            modelBuilder.Entity("MediaLakeCore.Domain.Comments.Comment", b =>
+                {
+                    b.HasOne("MediaLakeCore.Domain.Users.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .HasConstraintName("fk_comment_users_created_by_id");
+
+                    b.Navigation("CreatedBy");
+                });
+
             modelBuilder.Entity("MediaLakeCore.Domain.Posts.Post", b =>
                 {
                     b.HasOne("MediaLakeCore.Domain.Users.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .HasConstraintName("fk_post_users_created_by_id");
-
-                    b.Navigation("CreatedBy");
-                });
-
-            modelBuilder.Entity("MediaLakeCore.Domain.Posts.PostComment", b =>
-                {
-                    b.HasOne("MediaLakeCore.Domain.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .HasConstraintName("fk_post_comment_users_created_by_id");
-
-                    b.HasOne("MediaLakeCore.Domain.Posts.Post", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .HasConstraintName("fk_post_comment_posts_post_id");
 
                     b.Navigation("CreatedBy");
                 });
@@ -185,11 +225,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                         .HasConstraintName("fk_user_role_user_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MediaLakeCore.Domain.Posts.Post", b =>
-                {
-                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

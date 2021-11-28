@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace MediaLakeCore.Application.Posts.GetPostsList
 {
-    public class GetPostsListQuery : IRequest<IEnumerable<PostForListDto>>
+    public class GetPostsListQuery : IRequest<IEnumerable<PostsListItemDto>>
     {
     }
 
-    internal class GetPostsListQueryHandler : IRequestHandler<GetPostsListQuery, IEnumerable<PostForListDto>>
+    internal class GetPostsListQueryHandler : IRequestHandler<GetPostsListQuery, IEnumerable<PostsListItemDto>>
     {
         private readonly MediaLakeCoreDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -30,18 +30,20 @@ namespace MediaLakeCore.Application.Posts.GetPostsList
             _userContext = userContext;
         }
 
-        public async Task<IEnumerable<PostForListDto>> Handle(GetPostsListQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PostsListItemDto>> Handle(GetPostsListQuery request, CancellationToken cancellationToken)
         {
             using var connection = _dbContext.Database.GetDbConnection();
 
             var sql =$@"SELECT
-                        post.id AS {nameof(PostForListDto.Id)},
-                        post.name AS {nameof(PostForListDto.Name)},
-                        post.content AS {nameof(PostForListDto.Content)},
-                        (SELECT COUNT(*) FROM post_comment WHERE post_comment.post_id = post.id) AS {nameof(PostForListDto.CommentsCount)}
+                        post.id AS {nameof(PostsListItemDto.Id)},
+                        post.name AS {nameof(PostsListItemDto.Name)},
+                        post.content AS {nameof(PostsListItemDto.Content)},
+                        (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.id) AS {nameof(PostsListItemDto.CommentsCount)},
+                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = post.id AND is_like = TRUE) AS {nameof(PostsListItemDto.LikesCount)},
+                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = post.id AND is_like = FALSE) AS {nameof(PostsListItemDto.DislikesCount)}
                         FROM post;";
 
-            var posts = (await connection.QueryAsync<PostForListDto>(sql)).ToList();
+            var posts = (await connection.QueryAsync<PostsListItemDto>(sql)).ToList();
 
             return posts;
         }

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Dapper;
 using MediaLakeCore.Application.Posts.Dtos;
+using MediaLakeCore.Application.Posts.Exceptions;
 using MediaLakeCore.Application.Posts.Specifications;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.Domain.Posts;
@@ -39,7 +40,7 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
             _userContext = userContext;
         }
 
-        public async Task<PostByIdDto> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+        public async Task<PostByIdDto> Handle(GetPostByIdQuery query, CancellationToken cancellationToken)
         {
             using var connection = _dbContext.Database.GetDbConnection();
 
@@ -47,24 +48,31 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                         post.id AS {nameof(PostByIdDto.Id)},
                         post.name AS {nameof(PostByIdDto.Name)},
                         post.content AS {nameof(PostByIdDto.Content)},
-                        (SELECT COUNT(*) FROM post_comment WHERE post_comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
+                        (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
+                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS {nameof(PostByIdDto.LikesCount)},
+                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS {nameof(PostByIdDto.DislikesCount)},
                         u.id AS {nameof(PostByIdCreatedByDto.Id)},
                         u.name AS {nameof(PostByIdCreatedByDto.Name)}
                         FROM post
                         LEFT JOIN ""user"" u ON post.created_by_id = u.id
                         WHERE post.id = @PostId;";
 
-            var parameters = new DynamicParameters();
-            parameters.Add(nameof(PostId), request.PostId);
-
             var posts = await connection.QueryAsync<PostByIdDto, PostByIdCreatedByDto, PostByIdDto>(
                 sql,
                 (post, createdBy) => { post.CreatedBy = createdBy; return post; },
                 splitOn: "Id,Id",
-                param: parameters
+                param: new
+                {
+                    PostId = query.PostId
+                }
             );
 
-            var post = posts.First();
+            var post = posts.FirstOrDefault();
+
+            if (post == null)
+            {
+                throw new PostNotFoundException(new PostId(query.PostId));
+            }
 
             return post;
         }

@@ -1,6 +1,10 @@
 using FluentValidation;
+using MediaLakeCore.Application.CommentReactions;
 using MediaLakeCore.Application.Configuration.Behaviours;
+using MediaLakeCore.Application.PostReactions;
 using MediaLakeCore.Application.Users.CreateUser;
+using MediaLakeCore.Domain.CommentReactions;
+using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
 using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
 using MediatR;
@@ -19,6 +23,8 @@ namespace MediaLakeCore.Applciation
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddPipelineBehaviour();
+
+            services.AddDomainServices();
         }
 
         public static void ConfigureApplication(this IApplicationBuilder app)
@@ -41,6 +47,11 @@ namespace MediaLakeCore.Applciation
 
                 eventBus.StartConsumer(app);
             };
+        }
+        private static void AddDomainServices(this IServiceCollection services)
+        {
+            services.AddTransient<IPostReactionToggler, PostReactionToggler>();
+            services.AddTransient<ICommentReactionToggler, CommentReactionToggler>();
         }
     }
 }

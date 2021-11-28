@@ -1,3 +1,4 @@
+using MediaLakeCore.API.Middlewares;
 using MediaLakeCore.Applciation;
 using MediaLakeCore.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +40,8 @@ namespace MediaLakeCore
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseRouting();
 
