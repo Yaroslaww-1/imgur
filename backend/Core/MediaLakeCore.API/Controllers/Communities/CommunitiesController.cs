@@ -1,5 +1,7 @@
 ﻿using MediaLakeCore.Application.Communities.CreateCommunity;
 using MediaLakeCore.Application.Communities.GetCommunitiesList;
+using MediaLakeCore.Application.Communities.JoinCommunity;
+using MediaLakeCore.Application.Communities.LeaveCommunity;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +36,22 @@ namespace MediaLakeCore.API.Controllers.Communities
         {
             var result = await _mediator.Send(new CreateCommunityCommand(request.Name, request.Description));
             return result;
+        }
+
+        [HttpPost("{communityId}/join")]
+        [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+        public async Task<ActionResult> Join([FromRoute] Guid communityId)
+        {
+            await _mediator.Send(new JoinCommunityCommand(communityId));
+            return Ok();
+        }
+
+        [HttpPost("{communityId}/leave")]
+        [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+        public async Task<ActionResult> Leave([FromRoute] Guid communityId)
+        {
+            await _mediator.Send(new LeaveCommunityCommand(communityId));
+            return Ok();
         }
     }
 }

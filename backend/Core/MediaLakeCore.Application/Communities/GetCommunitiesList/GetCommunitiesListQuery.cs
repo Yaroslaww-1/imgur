@@ -30,6 +30,7 @@ namespace MediaLakeCore.Application.Communities.GetCommunitiesList
                         community.id AS {nameof(CommunitiesListItemDto.Id)},
                         community.name AS {nameof(CommunitiesListItemDto.Name)},
                         community.description AS {nameof(CommunitiesListItemDto.Description)},
+                        (SELECT COUNT(*) FROM community_member WHERE community_member.community_id = community.id) AS {nameof(CommunitiesListItemDto.MembersCount)},
                         u.id AS {nameof(CommunitiesListItemCreatedByDto.Id)},
                         u.name AS {nameof(CommunitiesListItemCreatedByDto.Name)}
                         FROM community

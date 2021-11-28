@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Domain.CommentReactions;
+using MediaLakeCore.Domain.Comments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,7 +23,9 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
                 .IsRequired();
 
             entity
-                .Property(pr => pr.CommentId)
+                .HasOne<Comment>()
+                .WithMany()
+                .HasForeignKey(pr => pr.CommentId)
                 .IsRequired();
 
             entity

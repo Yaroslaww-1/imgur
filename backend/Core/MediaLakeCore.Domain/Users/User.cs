@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediaLakeCore.Domain.Communities;
+using System;
 using System.Collections.Generic;
 
 namespace MediaLakeCore.Domain.Users

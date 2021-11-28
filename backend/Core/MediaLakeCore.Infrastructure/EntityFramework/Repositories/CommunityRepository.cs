@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Domain.Communities;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
@@ -16,6 +17,11 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
         {
             await _dbContext.Communities.AddAsync(community);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Community> GetByIdAsync(CommunityId communityId)
+        {
+            return await _dbContext.Communities.FirstAsync(c => c.Id == communityId);
         }
     }
 }

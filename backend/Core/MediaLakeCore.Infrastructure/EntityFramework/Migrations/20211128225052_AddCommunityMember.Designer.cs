@@ -3,15 +3,17 @@ using System;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(MediaLakeCoreDbContext))]
-    partial class MediaLakeCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211128225052_AddCommunityMember")]
+    partial class AddCommunityMember
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +41,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_comment_reaction");
-
-                    b.HasIndex("CommentId")
-                        .HasDatabaseName("ix_comment_reaction_comment_id");
 
                     b.ToTable("comment_reaction");
                 });
@@ -149,9 +148,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_post_reaction");
-
-                    b.HasIndex("PostId")
-                        .HasDatabaseName("ix_post_reaction_post_id");
 
                     b.ToTable("post_reaction");
                 });
@@ -262,16 +258,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                     b.ToTable("user_role");
                 });
 
-            modelBuilder.Entity("MediaLakeCore.Domain.CommentReactions.CommentReaction", b =>
-                {
-                    b.HasOne("MediaLakeCore.Domain.Comments.Comment", null)
-                        .WithMany()
-                        .HasForeignKey("CommentId")
-                        .HasConstraintName("fk_comment_reaction_comment_comment_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MediaLakeCore.Domain.Comments.Comment", b =>
                 {
                     b.HasOne("MediaLakeCore.Domain.Users.User", "CreatedBy")
@@ -303,16 +289,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_community_member_users_user_id");
-                });
-
-            modelBuilder.Entity("MediaLakeCore.Domain.PostReactions.PostReaction", b =>
-                {
-                    b.HasOne("MediaLakeCore.Domain.Posts.Post", null)
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .HasConstraintName("fk_post_reaction_post_post_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MediaLakeCore.Domain.Posts.Post", b =>

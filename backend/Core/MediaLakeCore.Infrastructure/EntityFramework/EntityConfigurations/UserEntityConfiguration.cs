@@ -1,4 +1,5 @@
-﻿using MediaLakeCore.Domain.Users;
+﻿using MediaLakeCore.Domain.Communities;
+using MediaLakeCore.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
