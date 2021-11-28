@@ -1,15 +1,14 @@
 ﻿using MediaLakeCore.Domain.Communities;
-using MediaLakeCore.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
 {
-    public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
+    public class CommunityEntityConfiguration : IEntityTypeConfiguration<Community>
     {
-        public void Configure(EntityTypeBuilder<Post> entity)
+        public void Configure(EntityTypeBuilder<Community> entity)
         {
-            entity.ToTable("post");
+            entity.ToTable("community");
 
             entity
                 .Property(c => c.Id)
@@ -23,22 +22,8 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
                 .IsRequired();
 
             entity
-                .Property(c => c.Content)
+                .Property(c => c.Description)
                 .IsRequired();
-
-            entity
-                .Property(c => c.Content)
-                .IsRequired();
-
-            entity
-                .Property(c => c.CreatedAt)
-                .IsRequired();
-
-            entity
-               .HasOne<Community>()
-               .WithMany()
-               .HasForeignKey(c => c.CommunityId)
-               .IsRequired();
 
             entity
                 .HasOne(c => c.CreatedBy);

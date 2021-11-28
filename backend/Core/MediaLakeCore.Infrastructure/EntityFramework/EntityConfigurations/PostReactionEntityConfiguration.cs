@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Domain.PostReactions;
+using MediaLakeCore.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,7 +23,9 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
                 .IsRequired();
 
             entity
-                .Property(pr => pr.PostId)
+                .HasOne<Post>()
+                .WithMany()
+                .HasForeignKey(pr => pr.PostId)
                 .IsRequired();
 
             entity
