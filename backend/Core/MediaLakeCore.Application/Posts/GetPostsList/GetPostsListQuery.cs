@@ -42,9 +42,16 @@ namespace MediaLakeCore.Application.Posts.GetPostsList
                         (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = post.id AND is_like = TRUE) AS {nameof(PostsListItemDto.LikesCount)},
                         (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = post.id AND is_like = FALSE) AS {nameof(PostsListItemDto.DislikesCount)}
                         FROM post
+                        LEFT JOIN community_member ON community_member.community_id = post.community_id
+                        WHERE community_member.user_id = @UserId
                         ORDER BY post.created_at DESC;";
 
-            var posts = (await connection.QueryAsync<PostsListItemDto>(sql)).ToList();
+            var posts = (await connection.QueryAsync<PostsListItemDto>(
+                sql,
+                new
+                {
+                    UserId = _userContext.UserId
+                })).ToList();
 
             return posts;
         }
