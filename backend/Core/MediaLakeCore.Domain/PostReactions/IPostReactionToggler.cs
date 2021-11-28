@@ -4,7 +4,7 @@ using MediaLakeCore.Domain.Users;
 
 namespace MediaLakeCore.Domain.PostReactions
 {
-    public interface IPostReactionsToggler : IDomainService
+    public interface IPostReactionToggler : IDomainService
     {
         public void ToggleLike(PostReaction existingPostReaction, PostId postId, UserId creatorId);
         public void ToggleDislike(PostReaction existingPostReaction, PostId postId, UserId creatorId);

@@ -5,11 +5,11 @@ using MediaLakeCore.Domain.Users;
 namespace MediaLakeCore.Application.PostReactions
 {
     #nullable enable
-    public class PostReactionsToggler : IPostReactionsToggler
+    public class PostReactionToggler : IPostReactionToggler
     {
         private readonly IPostReactionRepository _postReactionRepository;
 
-        public PostReactionsToggler(IPostReactionRepository postReactionRepository)
+        public PostReactionToggler(IPostReactionRepository postReactionRepository)
         {
             _postReactionRepository = postReactionRepository;
         }

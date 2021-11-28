@@ -29,12 +29,12 @@ namespace MediaLakeCore.Application.PostReactions.TogglePostLike
     {
         private readonly MediaLakeCoreDbContext _dbContext;
         private readonly IUserContext _userContext;
-        private readonly IPostReactionsToggler _postReactionsToggler;
+        private readonly IPostReactionToggler _postReactionsToggler;
 
         public TogglePostLikeCommandHandler(
             MediaLakeCoreDbContext dbContext,
             IUserContext userContext,
-            IPostReactionsToggler postReactionsToggler)
+            IPostReactionToggler postReactionsToggler)
         {
             _dbContext = dbContext;
             _userContext = userContext;
