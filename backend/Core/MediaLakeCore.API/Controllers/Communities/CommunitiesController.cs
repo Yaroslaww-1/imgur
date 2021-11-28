@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Application.Communities.CreateCommunity;
+using MediaLakeCore.Application.Communities.GetAuthenticatedUserCommunities;
 using MediaLakeCore.Application.Communities.GetCommunitiesList;
 using MediaLakeCore.Application.Communities.JoinCommunity;
 using MediaLakeCore.Application.Communities.LeaveCommunity;
@@ -27,6 +28,14 @@ namespace MediaLakeCore.API.Controllers.Communities
         public async Task<IEnumerable<CommunitiesListItemDto>> GetList()
         {
             var result = await _mediator.Send(new GetCommunitiesListQuery());
+            return result;
+        }
+
+        [HttpGet("authenticatedUser")]
+        [ProducesResponseType(typeof(IEnumerable<CommunitiesListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<CommunitiesListItemDto>> GetAuthenticatedUserList()
+        {
+            var result = await _mediator.Send(new GetAuthenticatedUserCommunitiesQuery());
             return result;
         }
 
