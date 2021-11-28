@@ -48,9 +48,9 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                         post.id AS {nameof(PostByIdDto.Id)},
                         post.name AS {nameof(PostByIdDto.Name)},
                         post.content AS {nameof(PostByIdDto.Content)},
-                        (SELECT COUNT(*) FROM post_comment WHERE post_comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
-                        (SELECT COUNT(*) FROM post_reaction post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS {nameof(PostByIdDto.LikesCount)},
-                        (SELECT COUNT(*) FROM post_reaction post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS {nameof(PostByIdDto.DislikesCount)},
+                        (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
+                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS {nameof(PostByIdDto.LikesCount)},
+                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS {nameof(PostByIdDto.DislikesCount)},
                         u.id AS {nameof(PostByIdCreatedByDto.Id)},
                         u.name AS {nameof(PostByIdCreatedByDto.Name)}
                         FROM post

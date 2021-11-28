@@ -43,20 +43,20 @@ namespace MediaLakeCore.Application.PostReactions.TogglePostLike
 
         public async Task<TogglePostLikeDto> Handle(TogglePostLikeCommand request, CancellationToken cancellationToken)
         {
-            var existingPostComment = await _dbContext.PostReactions
+            var existingPostReaction = await _dbContext.PostReactions
                 .WithSpecification(new PostReactionAggregateSpecification())
                 .WithSpecification(new PostReactionByPostIdAndCreatedBySpecification(new PostId(request.PostId), new UserId(_userContext.UserId)))
                 .FirstOrDefaultAsync();
 
-            _postReactionsToggler.ToggleLike(existingPostComment, new PostId(request.PostId), new UserId(_userContext.UserId));
+            _postReactionsToggler.ToggleLike(existingPostReaction, new PostId(request.PostId), new UserId(_userContext.UserId));
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             using var connection = _dbContext.Database.GetDbConnection();
 
             var sql = $@"SELECT * FROM
-                        (SELECT COUNT(*) AS {nameof(TogglePostLikeDto.LikesCount)} FROM post_reaction post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS c1,
-                        (SELECT COUNT(*) AS {nameof(TogglePostLikeDto.DislikesCount)} FROM post_reaction post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS c2";
+                        (SELECT COUNT(*) AS {nameof(TogglePostLikeDto.LikesCount)} FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS c1,
+                        (SELECT COUNT(*) AS {nameof(TogglePostLikeDto.DislikesCount)} FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS c2";
 
             var likesDislikesCount = await connection.QueryAsync<TogglePostLikeDto>(
                 sql,

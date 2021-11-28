@@ -30,5 +30,4 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
             _dbContext.SaveChanges();
         }
     }
-
 }

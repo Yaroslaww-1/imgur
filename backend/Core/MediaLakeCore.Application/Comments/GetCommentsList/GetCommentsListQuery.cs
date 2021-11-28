@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MediaLakeCore.Application.Comments.Specifications;
+using Dapper;
+using System.Linq;
 
 namespace MediaLakeCore.Application.Comments.GetCommentsList
 {
@@ -35,13 +37,30 @@ namespace MediaLakeCore.Application.Comments.GetCommentsList
 
         public async Task<IEnumerable<CommentsListItemDto>> Handle(GetCommentsListQuery query, CancellationToken cancellationToken)
         {
-            var comments = await _dbContext.Comments
-                .WithSpecification(new CommentAggregateSpecification())
-                .WithSpecification(new CommentsByPostIdSpecification(new PostId(query.PostId)))
-                .AsNoTracking()
-                .ToListAsync();
+            using var connection = _dbContext.Database.GetDbConnection();
 
-            return _mapper.Map<IEnumerable<CommentsListItemDto>>(comments);
+            var sql = $@"SELECT
+                        comment.id AS {nameof(CommentsListItemDto.Id)},
+                        comment.content AS {nameof(CommentsListItemDto.Content)},
+                        (SELECT COUNT(*) FROM comment_reaction WHERE comment_reaction.comment_id = comment.id AND is_like = TRUE) AS {nameof(CommentsListItemDto.LikesCount)},
+                        (SELECT COUNT(*) FROM comment_reaction WHERE comment_reaction.comment_id = comment.id AND is_like = FALSE) AS {nameof(CommentsListItemDto.DislikesCount)},
+                        u.id AS {nameof(CommentsListItemCreatedByDto.Id)},
+                        u.name AS {nameof(CommentsListItemCreatedByDto.Name)}
+                        FROM comment
+                        LEFT JOIN ""user"" u ON comment.created_by_id = u.id
+                        WHERE comment.post_id = @PostId;";
+
+            var comments = await connection.QueryAsync<CommentsListItemDto, CommentsListItemCreatedByDto, CommentsListItemDto>(
+                sql,
+                (comment, createdBy) => { comment.CreatedBy = createdBy; return comment; },
+                splitOn: "Id,Id",
+                param: new
+                {
+                    PostId = query.PostId
+                }
+            );
+
+            return comments;
         }
     }
 }

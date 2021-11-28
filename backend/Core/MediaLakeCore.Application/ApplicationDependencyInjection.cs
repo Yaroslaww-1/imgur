@@ -1,7 +1,9 @@
 using FluentValidation;
+using MediaLakeCore.Application.CommentReactions;
 using MediaLakeCore.Application.Configuration.Behaviours;
 using MediaLakeCore.Application.PostReactions;
 using MediaLakeCore.Application.Users.CreateUser;
+using MediaLakeCore.Domain.CommentReactions;
 using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
 using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
@@ -48,7 +50,8 @@ namespace MediaLakeCore.Applciation
         }
         private static void AddDomainServices(this IServiceCollection services)
         {
-            services.AddTransient<IPostReactionToggler, PostReactionsToggler>();
+            services.AddTransient<IPostReactionToggler, PostReactionToggler>();
+            services.AddTransient<ICommentReactionToggler, CommentReactionToggler>();
         }
     }
 }

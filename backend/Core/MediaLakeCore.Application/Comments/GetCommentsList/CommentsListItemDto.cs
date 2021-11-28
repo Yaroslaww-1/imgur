@@ -12,6 +12,8 @@ namespace MediaLakeCore.Application.Comments.GetCommentsList
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
+        public int LikesCount { get; set; }
+        public int DislikesCount { get; set; }
         public CommentsListItemCreatedByDto CreatedBy { get; set; }
     }
 }

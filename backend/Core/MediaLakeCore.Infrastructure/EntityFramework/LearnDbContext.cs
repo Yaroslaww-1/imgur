@@ -4,6 +4,7 @@ using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Domain.Comments;
+using MediaLakeCore.Domain.CommentReactions;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework
 {
@@ -14,6 +15,7 @@ namespace MediaLakeCore.Infrastructure.EntityFramework
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
+        public DbSet<CommentReaction> CommentReactions { get; set; }
 
         public MediaLakeCoreDbContext() : base() { }
 
