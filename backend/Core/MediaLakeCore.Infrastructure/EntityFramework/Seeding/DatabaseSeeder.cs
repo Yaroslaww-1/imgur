@@ -1,4 +1,6 @@
-﻿using MediaLakeCore.Domain.Users;
+﻿using MediaLakeCore.Domain.Communities;
+using MediaLakeCore.Domain.Posts;
+using MediaLakeCore.Domain.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -22,6 +24,7 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Seeding
 		{
 			SeedRoles();
 			SeedUsers();
+			SeedCommunities();
 		}
 
 		private void SeedRoles()
@@ -66,6 +69,39 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Seeding
 							"admin@gmail.com",
 							"Admin",
 							existingRoles.Where(r => r.Name == "Admin").ToList()));
+
+					context.SaveChanges();
+				}
+			};
+		}
+
+		private void SeedCommunities()
+		{
+			using (var scope = _app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+			{
+				using var context = scope.ServiceProvider.GetRequiredService<MediaLakeCoreDbContext>();
+
+				var existingCommunities = context.Communities.ToList();
+
+				if (!existingCommunities.Any())
+				{
+					var creator = context.Users.First(u => u.Id == new UserId(new Guid("22222222-2222-2222-2222-222222222222")));
+
+					var community = Community.Initialize(
+							new CommunityId(new Guid("11111111-1111-1111-1111-111111111111")),
+							creator,
+							"CSharp",
+							"Community for C# developers!");
+
+					context.Communities.Add(community);
+
+					var post = Post.CreateNew(
+							community.Id,
+							"C# 9.0 is released!",
+							"A lot of new features.",
+							creator);
+
+					context.Posts.Add(post);
 
 					context.SaveChanges();
 				}

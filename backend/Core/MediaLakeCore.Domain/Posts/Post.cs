@@ -1,4 +1,5 @@
-﻿using MediaLakeCore.Domain.Users;
+﻿using MediaLakeCore.Domain.Communities;
+using MediaLakeCore.Domain.Users;
 using System;
 
 namespace MediaLakeCore.Domain.Posts
@@ -8,26 +9,28 @@ namespace MediaLakeCore.Domain.Posts
         public PostId Id { get; private set; }
         public string Name { get; private set; }
         public string Content { get; private set; }
+        public CommunityId CommunityId { get; private set; }
         public User CreatedBy { get; private set; }
+        public DateTime CreatedAt { get; private set; }
 
         private Post()
         {
             // Only for EF
         }
 
-        private Post(PostId chatId, string name, string content, User createdBy)
+        private Post(CommunityId communityId, string name, string content, User createdBy)
         {
-            Id = chatId;
+            Id = new PostId(Guid.NewGuid());
+            CommunityId = communityId;
             Name = name;
             Content = content;
             CreatedBy = createdBy;
+            CreatedAt = DateTime.Now;
         }
 
-        public static Post CreateNew(string name, string content, User createdBy)
+        public static Post CreateNew(CommunityId communityId, string name, string content, User createdBy)
         {
-            var chatId = new PostId(Guid.NewGuid());
-
-            return new Post(chatId, name, content, createdBy);
+            return new Post(communityId, name, content, createdBy);
         }
     }
 }

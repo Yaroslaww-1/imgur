@@ -3,15 +3,17 @@ using System;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(MediaLakeCoreDbContext))]
-    partial class MediaLakeCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211128201700_AddCommunities")]
+    partial class AddCommunities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,9 +157,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                     b.HasKey("Id")
                         .HasName("pk_post");
 
-                    b.HasIndex("CommunityId")
-                        .HasDatabaseName("ix_post_community_id");
-
                     b.HasIndex("CreatedById")
                         .HasDatabaseName("ix_post_created_by_id");
 
@@ -252,13 +251,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
 
             modelBuilder.Entity("MediaLakeCore.Domain.Posts.Post", b =>
                 {
-                    b.HasOne("MediaLakeCore.Domain.Communities.Community", null)
-                        .WithMany()
-                        .HasForeignKey("CommunityId")
-                        .HasConstraintName("fk_post_community_community_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MediaLakeCore.Domain.Users.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
