@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-service
+  labels:
+    name: vault-service
+spec:
+  ports:
+    - port: 9100
+      targetPort: 9100
+  selector:
+    app: vault
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vault-virtual-service
+spec:
+  hosts:
+    - vault-service
+  http:
+    - route:
+        - destination:
+            host: vault-service
