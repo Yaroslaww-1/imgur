@@ -167,3 +167,6 @@ launchSettings.json
 
 # IdentityServer
 tempkey.jwk
+
+# Vault
+.vault/data

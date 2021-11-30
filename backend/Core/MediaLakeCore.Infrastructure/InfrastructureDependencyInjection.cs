@@ -15,6 +15,7 @@ using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework.Seeding;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
 using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
+using MediaLakeCore.Infrastructure.Vault;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,7 @@ namespace MediaLakeCore.Infrastructure
 
         private static void AddOptions(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<VaultOptions>(configuration.GetSection(VaultOptions.Location));
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Location));
             services.Configure<UrlsOptions>(configuration.GetSection(UrlsOptions.Location));
             services.Configure<KafkaOptions>(configuration.GetSection(KafkaOptions.Location));
