@@ -22,6 +22,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
 
 namespace MediaLakeCore.Infrastructure
 {
@@ -30,9 +33,11 @@ namespace MediaLakeCore.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions(configuration);
-            services.AddDatabaseContext(configuration);
+            services.AddLogger();
 
+            services.AddDatabaseContext(configuration);
             services.AddRepositories();
+
             services.AddUserContext();
 
             services.AddIntegrationEventBus();
@@ -57,6 +62,18 @@ namespace MediaLakeCore.Infrastructure
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Location));
             services.Configure<UrlsOptions>(configuration.GetSection(UrlsOptions.Location));
             services.Configure<KafkaOptions>(configuration.GetSection(KafkaOptions.Location));
+        }
+
+        private static void AddLogger(this IServiceCollection services)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            Log.Information("Logger configured");
         }
 
         private static void AddRepositories(this IServiceCollection services)

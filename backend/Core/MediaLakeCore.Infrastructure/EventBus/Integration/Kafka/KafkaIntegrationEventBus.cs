@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,13 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
         private readonly KafkaConnectionFactory _connectionFactory;
         private readonly IConsumer<Ignore, string> _consumer;
         private readonly IDictionary<KeyValuePair<string, string>, Type> _subscribedEvents;
+        private readonly ILogger<IIntegrationEventBus> _logger;
 
-        public KafkaIntegrationEventBus(KafkaConnectionFactory connectionFactory)
+        public KafkaIntegrationEventBus(KafkaConnectionFactory connectionFactory, ILogger<IIntegrationEventBus> logger)
         {
             _connectionFactory = connectionFactory;
             _subscribedEvents = new Dictionary<KeyValuePair<string, string>, Type>();
+            _logger = logger;
             _consumer = new ConsumerBuilder<Ignore, string>(_connectionFactory.GetConsumerConfig()).Build();
         }
       
@@ -47,7 +50,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
                 .Distinct()
                 .ToList()
                 .ForEach(aggregateName => {
-                    Console.WriteLine($"IntegrationEventBus - Subscribed to topic {aggregateName}");
+                    _logger.LogInformation($"Subscribed to topic {aggregateName}");
                     _consumer.Subscribe(aggregateName);
                 });
 
@@ -62,7 +65,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
                 }
                 catch (ConsumeException e)
                 {
-                    Console.WriteLine($"IntegrationEventBus - Error occured: {e.Error.Reason}");
+                    _logger.LogError($"Error occured: {e.Error.Reason}");
 
                     if (e.Error.IsFatal)
                     {
@@ -72,7 +75,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"IntegrationEventBus - Error occured: {e}");
+                    _logger.LogError($"Error occured: {e}");
                     break;
                 }
             }
@@ -89,7 +92,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
 
             _subscribedEvents.TryGetValue(new KeyValuePair<string, string>(consumeResult.Topic, eventType), out var EventClassType);
 
-            Console.WriteLine($"IntegrationEventBus - Event received: {eventType} {message.Value}");
+            _logger.LogInformation($"Event received: {eventType} {message.Value}");
 
             var @event = JsonConvert.DeserializeObject(message.Value, EventClassType);
 
@@ -99,7 +102,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
                 await mediator.Publish(@event);
             };
 
-            Console.WriteLine($"IntegrationEventBus - Event processed: {eventType} {message.Value}");
+            _logger.LogInformation($"Event processed: {eventType} {message.Value}");
         }
 
         public void Dispose()
