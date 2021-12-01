@@ -1,6 +1,12 @@
 import api from "../api.helper";
 
+import { IPost } from "@models/post.model";
+
 const endpoint = "/api/core/posts";
+
+interface IPosts {
+  posts: IPost[];
+}
 
 export class PostsService {
   static async createPost(
@@ -11,5 +17,9 @@ export class PostsService {
     // formData.append("content", content);
     // formData.append("image", image);
     api.post(endpoint, { name: "empty", content });
+  }
+
+  static async getPosts(): Promise<IPosts> {
+    return api.get(endpoint);
   }
 }
