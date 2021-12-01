@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { observer } from "mobx-react-lite";
 
 import { Context } from "index";
 
@@ -7,11 +8,9 @@ import { Input } from "@components/input";
 import { SimpleButton } from "@components/buttons/simple-button";
 
 import styles from "./styles.module.scss";
-import { observer } from "mobx-react-lite";
 
 export const Login: React.FC = observer(() => {
   const { store } = useContext(Context);
-  const form = React.createRef<HTMLFormElement>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,7 +24,7 @@ export const Login: React.FC = observer(() => {
       <div className={styles.topic}>
         <h1>Sign in</h1>
       </div>
-      <form className={styles.formContent} onSubmit={onSubmit} ref={form}>
+      <form className={styles.formContent} onSubmit={onSubmit}>
         <div className={styles.inputs}>
           <Input
             text={"Email"}
