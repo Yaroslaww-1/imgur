@@ -9,7 +9,9 @@ import { Context } from "index";
 import { CreatePost } from "pages/create-post";
 import { Login } from "pages/login";
 import { Signup } from "pages/signup";
+
 import { PrivateRoute } from "@components/private-route";
+import { Loader } from "@components/loader";
 
 export const App = observer(() => {
   const { store } = useContext(Context);
@@ -30,6 +32,6 @@ export const App = observer(() => {
       <Route path={AppRoute.SIGNUP} component={Signup} />
     </Switch>
   ) : (
-    <div>loading</div>
+    <Loader />
   );
 });
