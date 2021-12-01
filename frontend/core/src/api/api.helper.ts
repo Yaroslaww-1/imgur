@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
 
 import { stringifyParams } from "@common/helpers/url.helper";
+import { AuthService } from "./services/auth.service";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
@@ -25,6 +26,32 @@ class Api {
       )}`;
       return config;
     });
+    this.instance.interceptors.response.use(
+      config => {
+        return config;
+      },
+      async error => {
+        const originalRequest = error.config;
+        if (
+          error.response.status == 401 &&
+          error.config &&
+          !error.config._isRetry
+        ) {
+          originalRequest._isRetry = true;
+          try {
+            const responseTokens = await AuthService.refresh(
+              localStorage.getItem("refreshToken") || "",
+            );
+            localStorage.setItem("accessToken", responseTokens.access_token);
+            localStorage.setItem("refreshToken", responseTokens.refresh_token);
+            return this.instance.request(originalRequest);
+          } catch (e) {
+            console.log("Not authorized");
+          }
+        }
+        throw error;
+      },
+    );
     this.commonHeaders = { "Content-Type": "application/json" };
     this.formHeaders = { "Content-Type": "application/x-www-form-urlencoded" };
   }
