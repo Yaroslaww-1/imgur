@@ -4,6 +4,7 @@ import authApi from "../authApi.helper";
 import { IUser } from "@models/user.model";
 
 const tokenEndpoint = "/api/users/connect/token";
+const createUserEndpoint = "/api/users/users";
 const authUserEndpoint = "/api/users/authenticatedUser";
 
 interface IAuthResponse {
@@ -39,20 +40,16 @@ export class AuthService {
 
   static async registration(
     email: string,
+    name: string,
     password: string,
   ): Promise<IAuthResponse> {
-    return authApi.post(tokenEndpoint, {
-      grant_type: "password",
-      client_id: "ro.client",
-      client_secret: "secret",
+    return authApi.postJson(createUserEndpoint, {
       email,
+      name,
       password,
+      roles: ["User"],
     });
   }
-
-  // static async logout(): Promise<void> {
-  //   return authApi.post(`${tokenEndpoint}/`, null);
-  // }
 
   static async getAuthenticatedUser(
     username?: string,

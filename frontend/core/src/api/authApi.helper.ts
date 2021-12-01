@@ -9,6 +9,9 @@ class AuthApi {
   private readonly commonHeaders: {
     [key in string]: string;
   };
+  private readonly jsonHeaders: {
+    [key in string]: string;
+  };
   constructor() {
     this.instance = axios.create({
       baseURL: BASE_URL,
@@ -19,6 +22,7 @@ class AuthApi {
     this.commonHeaders = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
+    this.jsonHeaders = { "Content-Type": "application/json" };
   }
 
   async get<Response = unknown, Params = unknown>(
@@ -42,6 +46,19 @@ class AuthApi {
     const response = await this.instance
       .post(url, stringifyParams(payload), {
         headers: this.commonHeaders,
+      })
+      .then(({ data }) => data)
+      .catch(this.handleError);
+    return this.validateAndReturnResponse<Response>(response);
+  }
+
+  async postJson<Response = unknown, Payload = unknown>(
+    url: string,
+    payload: Payload,
+  ): Promise<Response> {
+    const response = await this.instance
+      .post(url, payload, {
+        headers: this.jsonHeaders,
       })
       .then(({ data }) => data)
       .catch(this.handleError);

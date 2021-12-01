@@ -8,6 +8,7 @@ import { Context } from "index";
 
 import { CreatePost } from "pages/create-post";
 import { Login } from "pages/login";
+import { Signup } from "pages/signup";
 import { PrivateRoute } from "@components/private-route";
 
 export const App = observer(() => {
@@ -26,6 +27,7 @@ export const App = observer(() => {
     <Switch>
       <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
       <Route path={AppRoute.LOGIN} component={Login} />
+      <Route path={AppRoute.SIGNUP} component={Signup} />
     </Switch>
   ) : (
     <div>loading</div>
