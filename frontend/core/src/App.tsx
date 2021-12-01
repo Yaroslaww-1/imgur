@@ -17,19 +17,17 @@ export const App = observer(() => {
   useEffect(() => {
     (async () => {
       setAuthenticating(true);
-      if (localStorage.getItem("accessToken")) {
-        await store.checkAuth();
-        setAuthenticating(false);
-      }
+      await store.checkAuth();
+      setAuthenticating(false);
     })();
   }, []);
 
-  return (
-    !authenticating
-      ? <Switch>
-        <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
-        <Route path={AppRoute.LOGIN} component={Login} />
-      </Switch>
-      : <div>loading</div>
+  return !authenticating ? (
+    <Switch>
+      <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
+      <Route path={AppRoute.LOGIN} component={Login} />
+    </Switch>
+  ) : (
+    <div>loading</div>
   );
 });
