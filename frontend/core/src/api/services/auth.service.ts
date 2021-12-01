@@ -1,5 +1,5 @@
 import api from "../api.helper";
-import authApi from "../apiAuth.helper";
+import authApi from "../authApi.helper";
 
 import { IUser } from "@models/user.model";
 
