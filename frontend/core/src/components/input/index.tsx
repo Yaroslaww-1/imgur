@@ -8,11 +8,20 @@ interface IInput {
 }
 
 export const Input: React.FC<IInput> = props => {
-  return (
-    <div className={styles.group}>
-      <input {...props} />
-      <span className={styles.bar}></span>
-      <label>{props.text}</label>
-    </div>
-  );
+  if (props.text === "") {
+    return (
+      <div className={styles.group}>
+        <input {...props} />
+        <span className={styles.bar}></span>
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.group}>
+        <input {...props} />
+        <span className={styles.bar}></span>
+        <label>{props.text}</label>
+      </div>
+    );
+  }
 };

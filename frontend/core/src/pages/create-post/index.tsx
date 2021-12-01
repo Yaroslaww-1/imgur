@@ -6,16 +6,18 @@ import { Page } from "@components/page";
 import { SimpleButton } from "@components/buttons/simple-button";
 import { ImageUploader } from "@components/image-uploader";
 import { Textarea } from "@components/textarea";
+import { Input } from "@components/input";
 
 import styles from "./styles.module.scss";
 
 export const CreatePost: React.FC = () => {
+  const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File>();
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    PostsService.createPost(content, image || "");
+    PostsService.createPost(name, content, image || "");
   }
 
   function handleFileUpload(newImage: File) {
@@ -32,6 +34,13 @@ export const CreatePost: React.FC = () => {
           <ImageUploader onUpload={handleFileUpload} />
         </div>
         <div className={styles.contentWrapper}>
+          <Input
+            text={""}
+            placeholder={"Name"}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setName(e.target.value);
+            }}
+          />
           <Textarea
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
               setContent(e.target.value);
