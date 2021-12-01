@@ -9,6 +9,9 @@ class Api {
   private readonly commonHeaders: {
     [key in string]: string;
   };
+  private readonly formHeaders: {
+    [key in string]: string;
+  };
   constructor() {
     this.instance = axios.create({
       baseURL: BASE_URL,
@@ -16,7 +19,14 @@ class Api {
         "Content-Type": "application/json",
       },
     });
+    this.instance.interceptors.request.use(config => {
+      config.headers.Authorization = `Bearer ${localStorage.getItem(
+        "accessToken",
+      )}`;
+      return config;
+    });
     this.commonHeaders = { "Content-Type": "application/json" };
+    this.formHeaders = { "Content-Type": "application/x-www-form-urlencoded" };
   }
 
   async get<Response = unknown, Params = unknown>(
@@ -33,6 +43,20 @@ class Api {
     return this.validateAndReturnResponse<Response>(response);
   }
 
+  async getAsForm<Response = unknown, Params = unknown>(
+    url: string,
+    params?: Params,
+  ): Promise<Response> {
+    const response = await this.instance
+      .get<Response>(`${url}?${stringifyParams(params)}`, {
+        headers: this.formHeaders,
+        data: {},
+      })
+      .then(({ data }) => data)
+      .catch(this.handleError);
+    return this.validateAndReturnResponse<Response>(response);
+  }
+
   async post<Response = unknown, Payload = unknown>(
     url: string,
     payload: Payload,
@@ -40,6 +64,19 @@ class Api {
     const response = await this.instance
       .post(url, payload, {
         headers: this.commonHeaders,
+      })
+      .then(({ data }) => data)
+      .catch(this.handleError);
+    return this.validateAndReturnResponse<Response>(response);
+  }
+
+  async postAsForm<Response = unknown, Payload = unknown>(
+    url: string,
+    payload: Payload,
+  ): Promise<Response> {
+    const response = await this.instance
+      .post(url, stringifyParams(payload), {
+        headers: this.formHeaders,
       })
       .then(({ data }) => data)
       .catch(this.handleError);
