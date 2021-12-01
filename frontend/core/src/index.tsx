@@ -5,15 +5,15 @@ import { createBrowserHistory } from "history";
 
 import { App } from "./App";
 
-import Store from "store/store";
+import AuthStore from "stores/authStore";
 
 import "./styles/index.scss";
 
 interface IState {
-  store: Store;
+  store: AuthStore;
 }
 
-export const store = new Store();
+export const store = new AuthStore();
 
 export const Context = createContext<IState>({ store });
 

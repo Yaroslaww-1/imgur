@@ -4,7 +4,7 @@ import { AuthService } from "@api/services/auth.service";
 
 import { IUser } from "@models/user.model";
 
-export default class Store {
+export default class AuthStore {
   user = {} as IUser;
   isAuth = false;
 
@@ -13,12 +13,10 @@ export default class Store {
   }
 
   setAuth(bool: boolean) {
-    console.log("Auth: ", bool);
     this.isAuth = bool;
   }
 
   setUser(user: IUser) {
-    console.log("User: ", user);
     this.user = user;
   }
 
@@ -56,7 +54,6 @@ export default class Store {
 
   async logout() {
     try {
-      // await AuthService.logout();
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       this.setAuth(false);
