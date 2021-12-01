@@ -12,7 +12,6 @@ import styles from "./styles.module.scss";
 export const CreatePost: React.FC = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File>();
-  const form = React.createRef<HTMLFormElement>();
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,7 +27,7 @@ export const CreatePost: React.FC = () => {
       <div className={styles.topic}>
         <h1>Create post</h1>
       </div>
-      <form className={styles.form} onSubmit={onSubmit} ref={form}>
+      <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.imageUploaderWrapper}>
           <ImageUploader onUpload={handleFileUpload} />
         </div>
@@ -39,13 +38,7 @@ export const CreatePost: React.FC = () => {
             }}
             placeholder={"Content"}
           />
-          <SimpleButton
-            text={"Post"}
-            size={"medium"}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-              form.current?.submit();
-            }}
-          />
+          <SimpleButton text={"Post"} size={"medium"} type={"submit"} />
         </div>
       </form>
     </Page>
