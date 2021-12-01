@@ -1,0 +1,44 @@
+.uploader {
+  margin: 0;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageWrapper {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.downloadSvg {
+  width: 50px;
+  height: 50px;
+}
+
+.hidden {
+  display: none;
+}
+
+.nameDeleteWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.previewImage {
+  max-height: 620px;
+  max-width: 750px;
+}
