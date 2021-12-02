@@ -7,7 +7,8 @@ using IdentityServer4.AccessTokenValidation;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using MediaLakeGatewayApi.Options;
-using System;
+using MediaLakeGatewayApi.Extensions;
+using Serilog;
 
 namespace MediaLakeGatewayApi
 {
@@ -29,6 +30,8 @@ namespace MediaLakeGatewayApi
         public void ConfigureServices(IServiceCollection services)
         {
             var authenticationProviderKey = "IdentityApiKey";
+
+            services.AddLogger(Configuration);
 
             services.AddCors();
 
@@ -56,6 +59,8 @@ namespace MediaLakeGatewayApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseCors(x => x
                 .AllowAnyMethod()
