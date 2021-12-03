@@ -6,10 +6,12 @@ import { AppRoute } from "@common/enums/app-route.enum";
 
 import { Context } from "index";
 
-import { CreatePost } from "pages/create-post";
 import { Login } from "pages/login";
 import { Signup } from "pages/signup";
+import { Home } from "pages/home";
+import { CreatePost } from "pages/create-post";
 
+import { Header } from "@components/header";
 import { PrivateRoute } from "@components/private-route";
 import { Loader } from "@components/loader";
 
@@ -26,11 +28,15 @@ export const App = observer(() => {
   }, []);
 
   return !authenticating ? (
-    <Switch>
-      <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
-      <Route path={AppRoute.LOGIN} component={Login} />
-      <Route path={AppRoute.SIGNUP} component={Signup} />
-    </Switch>
+    <>
+      <Header />
+      <Switch>
+        <Route path={AppRoute.LOGIN} component={Login} />
+        <Route path={AppRoute.SIGNUP} component={Signup} />
+        <PrivateRoute path={AppRoute.HOME} component={Home} />
+        <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
+      </Switch>
+    </>
   ) : (
     <Loader />
   );
