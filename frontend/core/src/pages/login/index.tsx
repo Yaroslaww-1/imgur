@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 
 import { Context } from "index";
+import { AppRoute } from "@common/enums/app-route.enum";
 
 import { Page } from "@components/page";
 import { Input } from "@components/input";
@@ -11,12 +13,19 @@ import styles from "./styles.module.scss";
 
 export const Login: React.FC = observer(() => {
   const { store } = useContext(Context);
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    store.login(email, password);
+    store.login(email, password).then(() => {
+      history.push(AppRoute.HOME);
+    });
+  }
+
+  function toSignUp() {
+    history.push(AppRoute.SIGNUP);
   }
 
   return (
@@ -47,16 +56,8 @@ export const Login: React.FC = observer(() => {
       </form>
       <div className={styles.signup}>
         <h3>Not signed up?</h3>
-        <SimpleButton text={"Sign up"} size={"small"} />
+        <SimpleButton text={"Sign up"} size={"small"} onClick={toSignUp} />
       </div>
-
-      <SimpleButton
-        text={"Log out"}
-        size={"small"}
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          store.logout();
-        }}
-      />
     </Page>
   );
 });
