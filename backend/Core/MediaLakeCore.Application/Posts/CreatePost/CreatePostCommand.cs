@@ -19,8 +19,9 @@ namespace MediaLakeCore.Application.Posts.CreatePost
         public string Name { get; set; }
         public string Content { get; set; }
 
-        public CreatePostCommand(string name, string content)
+        public CreatePostCommand(Guid communityId, string name, string content)
         {
+            CommunityId = communityId;
             Name = name;
             Content = content;
         }
