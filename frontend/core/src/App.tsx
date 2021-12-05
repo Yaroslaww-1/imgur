@@ -10,6 +10,7 @@ import { Login } from "pages/login";
 import { Signup } from "pages/signup";
 import { Home } from "pages/home";
 import { CreatePost } from "pages/create-post";
+import { Post } from "pages/post";
 
 import { Header } from "@components/header";
 import { PrivateRoute } from "@components/private-route";
@@ -35,6 +36,7 @@ export const App = observer(() => {
         <Route path={AppRoute.SIGNUP} component={Signup} />
         <PrivateRoute path={AppRoute.HOME} component={Home} />
         <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
+        <PrivateRoute path={AppRoute.POST} component={Post} />
       </Switch>
     </>
   ) : (

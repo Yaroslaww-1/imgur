@@ -1,0 +1,29 @@
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.name {
+  text-align: center;
+}
+.imageWrapper {
+  max-height: 620px;
+  max-width: 750px;
+
+  // TODO: remove when image will be added
+  height: 620px;
+  width: 750px;
+  border: 1px solid black;
+}
+.content {
+  padding: 20px;
+  font-size: 20px;
+  max-width: 100%;
+}
+.commentsCount {
+}
+.likesCount {
+}
+.dislikesCount {
+}
