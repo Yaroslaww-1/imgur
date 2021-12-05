@@ -2,7 +2,7 @@ import api from "../api.helper";
 
 import { IPost } from "@models/post.model";
 
-const endpoint = "/api/core/posts";
+const endpoint = "/api/core/communities/";
 
 interface IPosts {
   posts: IPost[];
@@ -10,6 +10,7 @@ interface IPosts {
 
 export class PostsService {
   static async createPost(
+    communityId: string,
     name: string,
     content: string,
     image: File | string,
@@ -17,10 +18,17 @@ export class PostsService {
     // const formData = new FormData();
     // formData.append("content", content);
     // formData.append("image", image);
-    api.post(endpoint, { name, content });
+    api.post(endpoint + communityId + "/posts", { name, content });
   }
 
-  static async getPosts(): Promise<IPosts> {
-    return api.get(endpoint);
+  static async getPosts(communityId: string): Promise<IPosts> {
+    return api.get(endpoint + communityId + "/posts");
+  }
+
+  static async getPostById(
+    communityId: string,
+    postId: string,
+  ): Promise<IPost> {
+    return api.get(endpoint + communityId + "/posts/" + postId);
   }
 }

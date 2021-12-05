@@ -3,4 +3,6 @@ export interface IPost {
   name: string;
   content: string;
   commentsCount: number;
+  likesCount: number;
+  dislikesCount: number;
 }
