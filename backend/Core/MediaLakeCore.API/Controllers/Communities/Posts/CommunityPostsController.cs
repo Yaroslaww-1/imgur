@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Application.Communities.GetCommunityPosts;
+using MediaLakeCore.Application.Posts.CreatePost;
 using MediaLakeCore.Application.Posts.GetPostsList;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,14 @@ namespace MediaLakeCore.API.Controllers.Communities.Posts
         public async Task<IEnumerable<PostsListItemDto>> GetPosts([FromRoute] Guid communityId)
         {
             var result = await _mediator.Send(new GetCommunityPostsQuery(communityId));
+            return result;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+        public async Task<Guid> Create([FromRoute] Guid communityId, [FromBody] CreatePostRequest request)
+        {
+            var result = await _mediator.Send(new CreatePostCommand(communityId, request.Name, request.Content));
             return result;
         }
     }

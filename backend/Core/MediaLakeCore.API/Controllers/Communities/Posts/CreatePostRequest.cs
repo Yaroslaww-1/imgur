@@ -1,4 +1,4 @@
-﻿namespace MediaLakeCore.API.Controllers.Posts
+﻿namespace MediaLakeCore.API.Controllers.Communities.Posts
 {
     public class CreatePostRequest
     {

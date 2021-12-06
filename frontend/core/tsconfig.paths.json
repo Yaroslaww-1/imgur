@@ -3,7 +3,8 @@
     "paths": {
       "@api/*": ["./api/*"],
       "@common/*": ["./common/*"],
-      "@components/*": ["./components/*"]
+      "@components/*": ["./components/*"],
+      "@models/*": ["./models/*"]
     }
   }
 }

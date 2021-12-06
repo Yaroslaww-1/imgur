@@ -1,0 +1,58 @@
+$hl-color: black;
+$muted-color: mix(white, black, 40%);
+$trans-time: 300ms;
+
+.group {
+  position: relative;
+  margin: 45px 0;
+  width: 100%;
+}
+
+input {
+  background: none;
+  font-size: 18px;
+  padding: 10px 0px 10px 0px;
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid $muted-color;
+  &:focus {
+    outline: none;
+    border-bottom: none;
+  }
+  &:focus ~ .bar:before {
+    width: 100%;
+  }
+}
+
+input[type="password"] {
+  letter-spacing: 0.3em;
+}
+
+label {
+  color: $muted-color;
+  font-size: 16px;
+  font-weight: normal;
+  position: absolute;
+  color: $hl-color;
+  top: -14px;
+  font-size: 14px;
+  transition: $trans-time ease all;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  width: 100%;
+  &:before {
+    content: "";
+    height: 2px;
+    width: 0;
+    bottom: 0px;
+    position: absolute;
+    background: $hl-color;
+    transition: $trans-time ease all;
+    left: 0%;
+  }
+}

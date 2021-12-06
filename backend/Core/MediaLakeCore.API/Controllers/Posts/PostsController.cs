@@ -37,13 +37,5 @@ namespace MediaLakeCore.API.Controllers.Posts
             var result = await _mediator.Send(new GetPostByIdQuery(id));
             return result;
         }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
-        public async Task<Guid> Create([FromBody] CreatePostRequest request)
-        {
-            var result = await _mediator.Send(new CreatePostCommand(request.Name, request.Content));
-            return result;
-        }
     }
 }
