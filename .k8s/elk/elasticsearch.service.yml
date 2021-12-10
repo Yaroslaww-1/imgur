@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-service
+  labels:
+    name: elasticsearch-service
+spec:
+  ports:
+    - port: 9200
+      targetPort: 9200
+  selector:
+    app: elasticsearch
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: elasticsearch-virtual-service
+spec:
+  hosts:
+    - elasticsearch-service
+  http:
+    - route:
+        - destination:
+            host: elasticsearch-service

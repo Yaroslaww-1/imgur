@@ -22,7 +22,7 @@
 
 10. Run k8s:
 
-`kubectl apply -f kafka -f gateway-api -f users-api -f core-api -f vault -f gateway.yml -n media-lake`
+`kubectl apply -f kafka -f gateway-api -f users-api -f core-api -f vault -f elk -f gateway -n media-lake`
 
 11. Run `sudo minikube tunnel` and `kubectl get svc istio-ingressgateway -n istio-system` to get running service ip
 

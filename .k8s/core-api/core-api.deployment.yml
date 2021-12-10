@@ -39,6 +39,9 @@ spec:
               value: media_lake_vault
             - name: VaultOptions__MountPoint
               value: media-lake-vault-core
+
+            - name: ElasticsearchOptions__ConnectionString
+              value: http://elasticsearch-service:9200
           resources:
             limits:
               memory: 512Mi

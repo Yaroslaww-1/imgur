@@ -1,0 +1,46 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: gateway
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: media-lake
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+    # - name: kibana
+    #   match:
+    #   - uri:
+    #       prefix: /kibana
+    #   route:
+    #     - destination:
+    #         host: kibana-service
+    #         port:
+    #           number: 5601
+    - name: backend
+      match:
+      - uri:
+          prefix: /api
+      rewrite:
+        uri: /dadas
+      route:
+        - destination:
+            host: frontend-service
+            port:
+              number: 80

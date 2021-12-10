@@ -17,6 +17,15 @@ metadata:
 spec:
   hosts:
     - gateway-api-service
+  # http:
+  #   - match:
+  #     - uri:
+  #         prefix: /*
+  #     rewrite:
+  #       uri: /api
+  #     route:
+  #   - destination:
+  #       host: gateway-api-service
   http:
     - route:
         - destination:
