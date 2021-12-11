@@ -1,16 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: demo-ingress
+  name: monitoring-ingress
 spec:
   rules:
-    - host: grafana
-      http:
+    - http:
         paths:
-          - path: /
+          - path: / #accessed by /metrics
             pathType: Prefix
             backend:
               service:
-                name: prometheus-grafana
+                name: gateway-api-service
                 port:
-                  number: 80
+                  number: 8000
