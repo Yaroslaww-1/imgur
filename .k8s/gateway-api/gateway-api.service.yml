@@ -4,7 +4,8 @@ metadata:
   name: gateway-api-service
 spec:
   ports:
-    - port: 8000
+    - name: api
+      port: 8000
       targetPort: 8000
   selector:
     app: gateway-api
@@ -17,16 +18,23 @@ metadata:
 spec:
   hosts:
     - gateway-api-service
-  # http:
-  #   - match:
-  #     - uri:
-  #         prefix: /*
-  #     rewrite:
-  #       uri: /api
-  #     route:
-  #   - destination:
-  #       host: gateway-api-service
   http:
     - route:
         - destination:
             host: gateway-api-service
+            port:
+              number: 8000
+# ---
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   name: gateway-api-metrics-virtual-service
+# spec:
+#   hosts:
+#     - gateway-api-metrics-service
+#   http:
+#     - route:
+#         - destination:
+#             host: gateway-api-service
+#             port:
+#               number: 8001

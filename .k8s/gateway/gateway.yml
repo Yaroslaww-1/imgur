@@ -29,4 +29,3 @@ spec:
                 name: gateway-api-service
                 port:
                   number: 8000
-          
