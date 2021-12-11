@@ -35,6 +35,8 @@ namespace MediaLakeGatewayApi
 
             services.AddCors();
 
+            services.AddMonitoring(Configuration);
+
             services.AddOcelot(Configuration);
 
             services.AddAuthentication()
@@ -67,6 +69,10 @@ namespace MediaLakeGatewayApi
                 .AllowAnyHeader()
                 .SetIsOriginAllowed(origin => true) // allow any origin
                 .AllowCredentials());
+
+            app.UseRouting();
+
+            app.UseMonitoring(Configuration);
 
             app.UseOcelot().Wait();
         }

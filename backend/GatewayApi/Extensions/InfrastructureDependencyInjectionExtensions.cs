@@ -1,6 +1,8 @@
 ﻿using MediaLakeGatewayApi.Options;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Prometheus;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -33,6 +35,35 @@ namespace MediaLakeGatewayApi.Extensions
                 .CreateLogger();
 
             Log.Information("Logger configured");
+        }
+
+        public static void AddMonitoring(this IServiceCollection services, IConfiguration configuration)
+        {
+            var monitoringOptions = configuration.GetSection(MonitoringOptions.Location).Get<MonitoringOptions>();
+
+            if (monitoringOptions.UseHealthChecks)
+            {
+                services.AddHealthChecks()
+                    .ForwardToPrometheus();
+            }
+        }
+
+        public static void UseMonitoring(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            var monitoringOptions = configuration.GetSection(MonitoringOptions.Location).Get<MonitoringOptions>();
+
+            if (monitoringOptions.UseHttpMetrics) {
+                app.UseHttpMetrics();
+            }
+
+            if (monitoringOptions.UseMonitoring)
+            {
+                Console.WriteLine("UseMonitoring");
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapMetrics();
+                });
+            }
         }
     }
 }
