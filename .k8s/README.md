@@ -55,7 +55,7 @@ Grafana:
 
 Prometheus:
 
-` kubectl port-forward --namespace monitoring service/prometheus-operated 3001:9090`
+`kubectl port-forward --namespace monitoring service/prometheus-operated 3001:9090`
 
 6. Grafana credentials:
 
