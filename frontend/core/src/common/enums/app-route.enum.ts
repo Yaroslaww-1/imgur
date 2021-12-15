@@ -4,5 +4,5 @@ export enum AppRoute {
   SIGNUP = "/signup",
   HOME = "/home",
   COMMUNITY = "/communities/:communityId",
-  POST = "/communities/:communityId/posts/:postId",
+  POST = "/posts/:postId",
 }

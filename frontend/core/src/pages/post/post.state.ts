@@ -12,10 +12,10 @@ export class PostState {
     makeAutoObservable(this);
   }
 
-  async fetchPostById(communityId: string, postId: string) {
+  async fetchPostById(postId: string) {
     this.state = FetchStatus.PENDING;
     try {
-      const post = await PostsService.getPostById(communityId, postId);
+      const post = await PostsService.getPostById(postId);
       runInAction(() => {
         this.post = post;
         this.state = FetchStatus.DONE;
