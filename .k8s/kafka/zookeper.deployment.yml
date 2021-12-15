@@ -14,15 +14,9 @@ spec:
     spec:
       containers:
         - name: zookeeper
-          image: confluentinc/cp-zookeeper:latest #bitnami/zookeeper:3.6.2-debian-10-r124
+          image: confluentinc/cp-zookeeper:latest
           ports:
             - containerPort: 2181
-          # readinessProbe:
-          #   tcpSocket:
-          #     port: 2181
-          #   timeoutSeconds: 5
-          #   periodSeconds: 5
-          #   initialDelaySeconds: 40
           env:
             - name: ZOOKEEPER_CLIENT_PORT
               value: '2181'

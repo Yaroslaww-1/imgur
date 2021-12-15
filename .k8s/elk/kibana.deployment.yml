@@ -1,0 +1,43 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - image: kibana:7.8.1
+          name: kibana
+          readinessProbe:
+            tcpSocket:
+              port: 5601
+            timeoutSeconds: 5
+            periodSeconds: 5
+            initialDelaySeconds: 120
+          ports:
+            - containerPort: 5601
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch-service:9200
+            - name: monitoring.enabled
+              value: "false"
+            - name: "SERVER_BASEPATH"
+              value: "/kibana"
+            - name: "SERVER_REWRITEBASEPATH"
+              value: "false"
+          resources:
+            limits:
+              memory: 1024Mi
+              cpu: "0.4"
+            requests:
+              memory: 1024Mi
+              cpu: "0.4"

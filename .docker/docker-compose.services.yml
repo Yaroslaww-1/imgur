@@ -115,22 +115,59 @@ services:
       VAULT_TOKEN: media_lake_vault
       DatabaseOptions__ConnectionString: Host=localhost;Port=7433;Database=postgres;Username=postgres;Password=pa55word
 
+  # Elastichearch
+  media_lake_elastichearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    container_name: media_lake_elastichearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9210:9200
+    networks:
+      - media-lake-elastichearch-network
+    volumes:
+      - media-lake-elastichearch-data:/usr/share/elasticsearch/data
+    environment:
+      - node.name=media_lake_elastichearch
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+
+  media_lake_kibana:
+    image: kibana:7.8.1
+    container_name: media_lake_kibana
+    depends_on:
+        - media_lake_elastichearch
+    ports:
+        - 9220:5601
+    networks:
+        - media-lake-elastichearch-network
+    environment:
+        - ELASTICSEARCH_HOSTS=http://media_lake_elastichearch:9200
+
   # Gateway API
   media_lake_gateway_api:
     container_name: media_lake_gateway_api
     build: 
       context: ../backend/GatewayApi
+    depends_on:
+      - media_lake_elastichearch
     restart: on-failure
     ports:
       - 8000:8000
     networks:
       - media-lake-core-network
       - media-lake-users-network
+      - media-lake-elastichearch-network
     links:
       - media_lake_users_api:media-lake-users-api
     environment:
       - Services__Hosts__Core=http://host.docker.internal:8100
       - Services__Hosts__Users=http://media-lake-users-api:8200
+      - ElasticsearchOptions__ConnectionString=http://media_lake_elastichearch:9200
 
   # Users API
   media_lake_users_api:
@@ -141,21 +178,26 @@ services:
     depends_on:
       - media_lake_kafka
       - media_lake_users_db
+      - media_lake_elastichearch
     ports:
       - 8200:8200
     networks:
       - media-lake-users-network
       - media-lake-kafka-network
+      - media-lake-elastichearch-network
     environment:
       - UrlsOptions__GatewayApiUrl=http://localhost:8200
       - ASPNETCORE_URLS=http://0.0.0.0:8200
       - KafkaOptions__BootstrapServers=media_lake_kafka:9092
       - DatabaseOptions__ConnectionString=Host=media_lake_users_db;Port=5432;Database=postgres;Username=postgres;Password=pa55word
+      - ElasticsearchOptions__ConnectionString=http://media_lake_elastichearch:9200
   
 volumes:
   media-lake-core-db-data:
     driver: local
   media-lake-users-db-data:
+    driver: local
+  media-lake-elastichearch-data:
     driver: local
 
 networks:
@@ -166,4 +208,6 @@ networks:
   media-lake-kafka-network:
     driver: bridge
   media-lake-vault-network:
+    driver: bridge
+  media-lake-elastichearch-network:
     driver: bridge

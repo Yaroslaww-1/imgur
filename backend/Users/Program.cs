@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace MediaLakeUsers
 {
@@ -14,7 +15,9 @@ namespace MediaLakeUsers
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .UseSerilog()
+                        .UseStartup<Startup>();
                 });
     }
 }
