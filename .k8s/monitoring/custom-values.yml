@@ -1,0 +1,18 @@
+prometheus:
+  ## Settings affecting prometheusSpec
+  ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+  ##
+  prometheusSpec:
+    ## How long to retain metrics
+    ##
+    retention: 365d
+
+    # Additional Scrape Config Secret
+    additionalScrapeConfigs:
+      - job_name: "gateway-api"
+        scrape_interval: 3s
+        static_configs:
+        - targets: ["http://172.18.165.122/api/metrics"]
+          labels:
+            env: 'production'
+            app: 'gateway-api'

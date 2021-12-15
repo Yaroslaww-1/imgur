@@ -22,6 +22,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Formatting.Elasticsearch;
+using Serilog.Sinks.Elasticsearch;
+using System;
 
 namespace MediaLakeCore.Infrastructure
 {
@@ -30,9 +36,11 @@ namespace MediaLakeCore.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions(configuration);
-            services.AddDatabaseContext(configuration);
+            services.AddLogger(configuration);
 
+            services.AddDatabaseContext(configuration);
             services.AddRepositories();
+
             services.AddUserContext();
 
             services.AddIntegrationEventBus();
@@ -57,6 +65,32 @@ namespace MediaLakeCore.Infrastructure
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Location));
             services.Configure<UrlsOptions>(configuration.GetSection(UrlsOptions.Location));
             services.Configure<KafkaOptions>(configuration.GetSection(KafkaOptions.Location));
+
+            services.Configure<LoggerOptions>(configuration.GetSection(LoggerOptions.Location));
+            services.Configure<ElasticsearchOptions>(configuration.GetSection(ElasticsearchOptions.Location));
+        }
+
+        private static void AddLogger(this IServiceCollection services, IConfiguration configuration)
+        {
+            var elasticsearchOptions = configuration.GetSection(ElasticsearchOptions.Location).Get<ElasticsearchOptions>();
+            var loggerOptions = configuration.GetSection(LoggerOptions.Location).Get<LoggerOptions>();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .Enrich.WithProperty("app", loggerOptions.AppName)
+                .WriteTo.Console()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticsearchOptions.ConnectionString))
+                {
+                    AutoRegisterTemplate = true,
+                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
+                    CustomFormatter = new ExceptionAsObjectJsonFormatter(renderMessage: true),
+                    IndexFormat = elasticsearchOptions.IndexFormat
+                })
+                .CreateLogger();
+
+            Log.Information("Logger configured");
         }
 
         private static void AddRepositories(this IServiceCollection services)

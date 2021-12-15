@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-service
+  labels:
+    name: kibana-service
+spec:
+  ports:
+    - port: 5601
+      targetPort: 5601
+  selector:
+    app: kibana
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kibana-virtual-service
+spec:
+  hosts:
+    - kibana-service
+  http:
+    - route:
+        - destination:
+            host: kibana-service

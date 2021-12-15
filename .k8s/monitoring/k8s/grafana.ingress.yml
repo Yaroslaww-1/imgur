@@ -1,23 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: monitoring-ingress
 spec:
   rules:
     - http:
         paths:
-          - path: /kafkaui
-            pathType: Prefix
-            backend:
-              service:
-                name: kafka-ui-service
-                port:
-                  number: 8080
-          - path: /
+          - path: / #accessed by /metrics
             pathType: Prefix
             backend:
               service:
                 name: gateway-api-service
                 port:
                   number: 8000
-          

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using System.Collections.Generic;
 
 namespace MediaLakeCore
@@ -72,6 +73,8 @@ namespace MediaLakeCore
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseMiddleware<ExceptionMiddleware>();
 

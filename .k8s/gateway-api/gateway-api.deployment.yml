@@ -27,6 +27,16 @@ spec:
               value: http://core-api-service
             - name: Services__Hosts__Users
               value: http://users-api-service
+              
+            - name: ElasticsearchOptions__ConnectionString
+              value: http://elasticsearch-service:9200
+
+            - name: MonitoringOptions__UseMonitoring
+              value: "true"
+            - name: MonitoringOptions__UseHttpMetrics
+              value: "true"
+            - name: MonitoringOptions__UseHealthChecks
+              value: "true"
           resources:
             limits:
               memory: 256Mi
