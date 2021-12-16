@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using MediaLakeCore.Application.Comments.Specifications;
 using Dapper;
 using System.Linq;
+using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 
 namespace MediaLakeCore.Application.Comments.GetCommentsList
 {
@@ -27,12 +28,12 @@ namespace MediaLakeCore.Application.Comments.GetCommentsList
     internal class GetCommentsListQueryHandler : IRequestHandler<GetCommentsListQuery, IEnumerable<CommentsListItemDto>>
     {
         private readonly MediaLakeCoreDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
 
-        public GetCommentsListQueryHandler(MediaLakeCoreDbContext context, IMapper mapper)
+        public GetCommentsListQueryHandler(MediaLakeCoreDbContext context, IUserContext userContext)
         {
             _dbContext = context;
-            _mapper = mapper;
+            _userContext = userContext;
         }
 
         public async Task<IEnumerable<CommentsListItemDto>> Handle(GetCommentsListQuery query, CancellationToken cancellationToken)
@@ -42,21 +43,29 @@ namespace MediaLakeCore.Application.Comments.GetCommentsList
             var sql = $@"SELECT
                         comment.id AS {nameof(CommentsListItemDto.Id)},
                         comment.content AS {nameof(CommentsListItemDto.Content)},
-                        (SELECT COUNT(*) FROM comment_reaction WHERE comment_reaction.comment_id = comment.id AND is_like = TRUE) AS {nameof(CommentsListItemDto.LikesCount)},
-                        (SELECT COUNT(*) FROM comment_reaction WHERE comment_reaction.comment_id = comment.id AND is_like = FALSE) AS {nameof(CommentsListItemDto.DislikesCount)},
-                        u.id AS {nameof(CommentsListItemCreatedByDto.Id)},
-                        u.name AS {nameof(CommentsListItemCreatedByDto.Name)}
+                        comment.likes_count AS {nameof(CommentsListItemDto.LikesCount)},
+                        comment.dislikes_count AS {nameof(CommentsListItemDto.DislikesCount)},
+                        u.id AS {nameof(CreatedByDto.Id)},
+                        u.name AS {nameof(CreatedByDto.Name)},
+                        cr.is_like AS {nameof(AuthenticatedUserReactionDto.IsLike)}
                         FROM comment
                         LEFT JOIN ""user"" u ON comment.created_by_id = u.id
+                        LEFT JOIN comment_reaction cr ON cr.comment_id = comment.id AND cr.created_by = @AuthenticatedUserId
                         WHERE comment.post_id = @PostId;";
 
-            var comments = await connection.QueryAsync<CommentsListItemDto, CommentsListItemCreatedByDto, CommentsListItemDto>(
+            var comments = await connection.QueryAsync<CommentsListItemDto, CreatedByDto, AuthenticatedUserReactionDto, CommentsListItemDto>(
                 sql,
-                (comment, createdBy) => { comment.CreatedBy = createdBy; return comment; },
-                splitOn: "Id,Id",
+                (comment, createdBy, authenticatedUserReaction) =>
+                {
+                    comment.CreatedBy = createdBy;
+                    comment.AuthenticatedUserReaction = authenticatedUserReaction;
+                    return comment;
+                },
+                splitOn: "Id,Id,IsLike",
                 param: new
                 {
-                    PostId = query.PostId
+                    PostId = query.PostId,
+                    AuthenticatedUserId = _userContext.UserId
                 }
             );
 

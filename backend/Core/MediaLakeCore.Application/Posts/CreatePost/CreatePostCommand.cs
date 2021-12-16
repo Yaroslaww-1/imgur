@@ -55,6 +55,8 @@ namespace MediaLakeCore.Application.Posts.CreatePost
 
             await _postRepository.AddAsync(post);
 
+            await _dbContext.SaveChangesAsync();
+
             return post.Id.Value;
         }
     }

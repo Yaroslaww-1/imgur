@@ -13,9 +13,10 @@ using MediaLakeCore.Infrastructure.EntityFramework;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework.Seeding;
+using MediaLakeCore.Infrastructure.EventBus.Domain;
+using MediaLakeCore.Infrastructure.EventBus.Domain.MediatR;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
 using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
-using MediaLakeCore.Infrastructure.Vault;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,8 @@ namespace MediaLakeCore.Infrastructure
         {
             services.AddOptions(configuration);
             services.AddLogger(configuration);
+
+            services.AddDomainEventBus();
 
             services.AddDatabaseContext(configuration);
             services.AddRepositories();
@@ -115,6 +118,11 @@ namespace MediaLakeCore.Infrastructure
         {
             services.AddSingleton<KafkaConnectionFactory>();
             services.AddSingleton<IIntegrationEventBus, KafkaIntegrationEventBus>();
+        }
+
+        private static void AddDomainEventBus(this IServiceCollection services)
+        {
+            services.AddTransient<IDomainEventBus, MediatrDomainEventBus>();
         }
 
         private static void AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)

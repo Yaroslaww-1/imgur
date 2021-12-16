@@ -45,6 +45,8 @@ namespace MediaLakeCore.Application.Users.CreateUser
                 roles);
 
             await _userRepository.AddAsync(user);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -2,20 +2,26 @@
 
 namespace MediaLakeCore.Application.Posts.Dtos
 {
-    public class PostByIdCreatedByDto
+    public class CreatedByDto
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
+    }
+
+    public class AuthenticatedUserReactionDto
+    {
+        public bool IsLike { get; set; }
     }
 
     public class PostByIdDto
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Content { get; set; }
+        public string Name { get; set; } = null!;
+        public string Content { get; set; } = null!;
         public int CommentsCount { get; set; }
         public int LikesCount { get; set; }
         public int DislikesCount { get; set; }
-        public PostByIdCreatedByDto CreatedBy { get; set; }
+        public CreatedByDto CreatedBy { get; set; } = null!;
+        public AuthenticatedUserReactionDto? AuthenticatedUserReaction { get; set; }
     }
 }

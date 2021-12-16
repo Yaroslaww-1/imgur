@@ -1,7 +1,6 @@
-﻿using MediaLakeCore.Application.Posts.CreatePost;
-using MediaLakeCore.Application.Posts.Dtos;
+﻿using MediaLakeCore.Application.Posts.Dtos;
+using MediaLakeCore.Application.Posts.GetAuthenticatedUserPostsList;
 using MediaLakeCore.Application.Posts.GetPostsById;
-using MediaLakeCore.Application.Posts.GetPostsList;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +21,11 @@ namespace MediaLakeCore.API.Controllers.Posts
             _mediator = mediator;
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<PostsListItemDto>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<PostsListItemDto>> GetList()
+        [HttpGet("authenticatedUser")]
+        [ProducesResponseType(typeof(IEnumerable<AuthenticatedUserPostsListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<AuthenticatedUserPostsListItemDto>> GetList()
         {
-            var result = await _mediator.Send(new GetPostsListQuery());
+            var result = await _mediator.Send(new GetAuthenticatedUserPostsListQuery());
             return result;
         }
 
