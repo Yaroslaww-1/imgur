@@ -1,10 +1,11 @@
-﻿using MediaLakeCore.Domain.Comments;
+﻿using MediaLakeCore.BuildingBlocks.Domain;
+using MediaLakeCore.Domain.Comments;
 using MediaLakeCore.Domain.Users;
 using System;
 
 namespace MediaLakeCore.Domain.CommentReactions
 {
-    public class CommentReaction
+    public class CommentReaction : Entity
     {
         public CommentReactionId Id { get; private set; }
         public CommentId CommentId { get; private set; }

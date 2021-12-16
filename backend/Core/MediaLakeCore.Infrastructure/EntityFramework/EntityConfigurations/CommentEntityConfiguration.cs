@@ -26,6 +26,14 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations
                 .IsRequired();
 
             entity
+                .Property(c => c.LikesCount)
+                .IsRequired();
+
+            entity
+                .Property(c => c.DislikesCount)
+                .IsRequired();
+
+            entity
                 .HasOne(cm => cm.CreatedBy);
         }
     }

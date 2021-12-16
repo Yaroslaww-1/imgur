@@ -2,11 +2,11 @@
 using MediaLakeCore.Infrastructure.EntityFramework.EntityConfigurations;
 using MediaLakeCore.Domain.Users;
 using MediaLakeCore.Domain.Posts;
-using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Domain.Comments;
-using MediaLakeCore.Domain.CommentReactions;
 using MediaLakeCore.Domain.Communities;
 using MediaLakeCore.Domain.CommunityMember;
+using MediaLakeCore.Domain.CommentReactions;
+using MediaLakeCore.Domain.PostReactions;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework
 {

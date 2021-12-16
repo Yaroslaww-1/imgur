@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Domain.Posts;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts
@@ -15,7 +16,11 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts
         public async Task AddAsync(Post post)
         {
             await _dbContext.Posts.AddAsync(post);
-            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Post> GetByIdAsync(PostId postId)
+        {
+            return await _dbContext.Posts.FirstAsync(c => c.Id == postId);
         }
     }
 }

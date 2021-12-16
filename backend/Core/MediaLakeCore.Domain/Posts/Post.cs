@@ -1,10 +1,11 @@
-﻿using MediaLakeCore.Domain.Communities;
+﻿using MediaLakeCore.BuildingBlocks.Domain;
+using MediaLakeCore.Domain.Communities;
 using MediaLakeCore.Domain.Users;
 using System;
 
 namespace MediaLakeCore.Domain.Posts
 {
-    public class Post
+    public class Post : Entity, IAggregateRoot
     {
         public PostId Id { get; private set; }
         public string Name { get; private set; }
@@ -12,6 +13,9 @@ namespace MediaLakeCore.Domain.Posts
         public CommunityId CommunityId { get; private set; }
         public User CreatedBy { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public int CommentsCount { get; private set; }
+        public int LikesCount { get; private set; }
+        public int DislikesCount { get; private set; }
 
         private Post()
         {
@@ -26,11 +30,22 @@ namespace MediaLakeCore.Domain.Posts
             Content = content;
             CreatedBy = createdBy;
             CreatedAt = DateTime.Now;
+            CommentsCount = 0;
+            LikesCount = 0;
+            DislikesCount = 0;
         }
 
         public static Post CreateNew(CommunityId communityId, string name, string content, User createdBy)
         {
             return new Post(communityId, name, content, createdBy);
         }
+
+        public void AddNewLike() => LikesCount++;
+        public void RemoveExistingLike() => LikesCount--;
+
+        public void AddNewDislike() => DislikesCount++;
+        public void RemoveExistingDislike() => DislikesCount--;
+
+        public void AddNewComment() => CommentsCount++;
     }
 }

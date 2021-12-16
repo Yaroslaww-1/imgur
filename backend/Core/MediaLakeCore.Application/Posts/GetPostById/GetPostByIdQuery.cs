@@ -1,16 +1,13 @@
-﻿using Ardalis.Specification.EntityFrameworkCore;
-using AutoMapper;
+﻿using AutoMapper;
 using Dapper;
 using MediaLakeCore.Application.Posts.Dtos;
 using MediaLakeCore.Application.Posts.Exceptions;
-using MediaLakeCore.Application.Posts.Specifications;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,22 +45,30 @@ namespace MediaLakeCore.Application.Posts.GetPostsById
                         post.id AS {nameof(PostByIdDto.Id)},
                         post.name AS {nameof(PostByIdDto.Name)},
                         post.content AS {nameof(PostByIdDto.Content)},
-                        (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.id) AS {nameof(PostByIdDto.CommentsCount)},
-                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS {nameof(PostByIdDto.LikesCount)},
-                        (SELECT COUNT(*) FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS {nameof(PostByIdDto.DislikesCount)},
-                        u.id AS {nameof(PostByIdCreatedByDto.Id)},
-                        u.name AS {nameof(PostByIdCreatedByDto.Name)}
+                        post.comments_count AS {nameof(PostByIdDto.CommentsCount)},
+                        post.likes_count AS {nameof(PostByIdDto.LikesCount)},
+                        post.dislikes_count AS {nameof(PostByIdDto.DislikesCount)},
+                        u.id AS {nameof(CreatedByDto.Id)},
+                        u.name AS {nameof(CreatedByDto.Name)},
+                        pr.is_like AS {nameof(AuthenticatedUserReactionDto.IsLike)}
                         FROM post
                         LEFT JOIN ""user"" u ON post.created_by_id = u.id
+                        LEFT JOIN post_reaction pr ON pr.post_id = post.id AND pr.created_by = @AuthenticatedUserId
                         WHERE post.id = @PostId;";
 
-            var posts = await connection.QueryAsync<PostByIdDto, PostByIdCreatedByDto, PostByIdDto>(
+            var posts = await connection.QueryAsync<PostByIdDto, CreatedByDto, AuthenticatedUserReactionDto, PostByIdDto>(
                 sql,
-                (post, createdBy) => { post.CreatedBy = createdBy; return post; },
-                splitOn: "Id,Id",
+                (post, createdBy, authenticatedUserReaction) =>
+                {
+                    post.CreatedBy = createdBy;
+                    post.AuthenticatedUserReaction = authenticatedUserReaction;
+                    return post;
+                },
+                splitOn: "Id,Id,IsLike",
                 param: new
                 {
-                    PostId = query.PostId
+                    PostId = query.PostId,
+                    AuthenticatedUserId = _userContext.UserId
                 }
             );
 

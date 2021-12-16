@@ -15,7 +15,6 @@ using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
 using MediaLakeCore.Infrastructure.EntityFramework.Seeding;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
 using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
-using MediaLakeCore.Infrastructure.Vault;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
