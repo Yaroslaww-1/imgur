@@ -50,8 +50,8 @@ namespace MediaLakeCore.Applciation
         }
         private static void AddDomainServices(this IServiceCollection services)
         {
-            services.AddTransient<IPostReactionToggler, PostReactionToggler>();
-            services.AddTransient<ICommentReactionToggler, CommentReactionToggler>();
+            services.AddTransient<PostReactionToggler, PostReactionToggler>();
+            services.AddTransient<CommentReactionToggler, CommentReactionToggler>();
         }
     }
 }

@@ -61,6 +61,14 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("created_by_id");
 
+                    b.Property<int>("DislikesCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("dislikes_count");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("likes_count");
+
                     b.Property<Guid>("PostId")
                         .HasColumnType("uuid")
                         .HasColumnName("post_id");
@@ -162,6 +170,10 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("comments_count");
+
                     b.Property<Guid>("CommunityId")
                         .HasColumnType("uuid")
                         .HasColumnName("community_id");
@@ -178,6 +190,14 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uuid")
                         .HasColumnName("created_by_id");
+
+                    b.Property<int>("DislikesCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("dislikes_count");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("likes_count");
 
                     b.Property<string>("Name")
                         .IsRequired()

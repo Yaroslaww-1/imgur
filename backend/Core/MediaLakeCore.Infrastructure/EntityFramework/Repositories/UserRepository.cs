@@ -17,7 +17,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
         public async Task AddAsync(User user)
         {
             await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<User> GetByIdAsync(UserId userId)

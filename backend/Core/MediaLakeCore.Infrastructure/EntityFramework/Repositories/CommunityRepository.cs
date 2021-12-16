@@ -16,7 +16,6 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
         public async Task AddAsync(Community community)
         {
             await _dbContext.Communities.AddAsync(community);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Community> GetByIdAsync(CommunityId communityId)

@@ -66,6 +66,8 @@ namespace MediaLakeCore.Application.Communities.JoinCommunity
 
             await _communityMemberRepository.AddAsync(member);
 
+            await _dbContext.SaveChangesAsync();
+
             return Unit.Value;
         }
     }

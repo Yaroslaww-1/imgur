@@ -1,4 +1,6 @@
 ﻿using MediaLakeCore.Domain.Comments;
+using MediaLakeCore.Infrastructure.EventBus.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
@@ -15,7 +17,11 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
         public async Task AddAsync(Comment comment)
         {
             await _dbContext.Comments.AddAsync(comment);
-            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Comment> GetByIdAsync(CommentId commentId)
+        {
+            return await _dbContext.Comments.FirstAsync(c => c.Id == commentId);
         }
     }
 }

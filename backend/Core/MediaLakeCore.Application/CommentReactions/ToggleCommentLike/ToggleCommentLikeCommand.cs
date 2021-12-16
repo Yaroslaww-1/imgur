@@ -31,16 +31,19 @@ namespace MediaLakeCore.Application.CommentReactions.ToggleCommentLike
     {
         private readonly MediaLakeCoreDbContext _dbContext;
         private readonly IUserContext _userContext;
-        private readonly ICommentReactionToggler _commentReactionToggler;
+        private readonly CommentReactionToggler _commentReactionToggler;
+        private readonly ICommentRepository _commentRepository;
 
         public ToggleCommentLikeCommandHandler(
             MediaLakeCoreDbContext dbContext,
             IUserContext userContext,
-            ICommentReactionToggler commentReactionToggler)
+            CommentReactionToggler commentReactionToggler,
+            ICommentRepository commentRepository)
         {
             _dbContext = dbContext;
             _userContext = userContext;
             _commentReactionToggler = commentReactionToggler;
+            _commentRepository = commentRepository;
         }
 
         public async Task<ToggleCommentLikeDto> Handle(ToggleCommentLikeCommand request, CancellationToken cancellationToken)
@@ -50,24 +53,18 @@ namespace MediaLakeCore.Application.CommentReactions.ToggleCommentLike
                 .WithSpecification(new CommentReactionByCommentIdAndCreatedBySpecification(new CommentId(request.CommentId), new UserId(_userContext.UserId)))
                 .FirstOrDefaultAsync();
 
-            _commentReactionToggler.ToggleLike(existingReaction, new CommentId(request.CommentId), new UserId(_userContext.UserId));
+            var targetComment = await _commentRepository.GetByIdAsync(new CommentId(request.CommentId));
+
+            var (resultingReaction, resultingComment) = _commentReactionToggler.ToggleLike(existingReaction, targetComment, new UserId(_userContext.UserId));
 
             await _dbContext.SaveChangesAsync();
 
-            using var connection = _dbContext.Database.GetDbConnection();
-
-            var sql = $@"SELECT * FROM
-                        (SELECT COUNT(*) AS {nameof(ToggleCommentLikeDto.LikesCount)} FROM comment_reaction WHERE comment_reaction.comment_id = @CommentId AND is_like = TRUE) AS c1,
-                        (SELECT COUNT(*) AS {nameof(ToggleCommentLikeDto.DislikesCount)} FROM comment_reaction WHERE comment_reaction.comment_id = @CommentId AND is_like = FALSE) AS c2";
-
-            var likesDislikesCount = await connection.QueryAsync<ToggleCommentLikeDto>(
-                sql,
-                new
-                {
-                    CommentId = request.CommentId
-                });
-
-            return likesDislikesCount.First();
+            return new ToggleCommentLikeDto()
+            {
+                LikesCount = resultingComment.LikesCount,
+                DislikesCount = resultingComment.DislikesCount,
+                AuthenticatedUserReaction = resultingReaction != null ? new AuthenticatedUserReactionDto() { IsLike = resultingReaction.IsLike } : null
+            };
         }
     }
 }

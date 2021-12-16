@@ -50,6 +50,8 @@ namespace MediaLakeCore.Application.Comments.CreateComment
 
             await _commentRepository.AddAsync(comment);
 
+            await _dbContext.SaveChangesAsync();
+
             return comment.Id.Value;
         }
     }

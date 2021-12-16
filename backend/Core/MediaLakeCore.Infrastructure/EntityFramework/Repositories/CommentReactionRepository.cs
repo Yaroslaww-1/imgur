@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Domain.CommentReactions;
+using MediaLakeCore.Infrastructure.EventBus.Domain;
 using System.Threading.Tasks;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
@@ -15,19 +16,16 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Repositories
         public async Task AddAsync(CommentReaction reaction)
         {
             await _dbContext.CommentReactions.AddAsync(reaction);
-            await _dbContext.SaveChangesAsync();
         }
 
         public void Add(CommentReaction reaction)
         {
             _dbContext.CommentReactions.Add(reaction);
-            _dbContext.SaveChanges();
         }
 
         public void Delete(CommentReaction reaction)
         {
             _dbContext.CommentReactions.Remove(reaction);
-            _dbContext.SaveChanges();
         }
     }
 }

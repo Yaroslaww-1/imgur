@@ -64,6 +64,8 @@ namespace MediaLakeCore.Application.Communities.LeaveCommunity
 
             await _communityMemberRepository.DeleteAsync(existingCommunityMember);
 
+            await _dbContext.SaveChangesAsync();
+
             return Unit.Value;
         }
     }

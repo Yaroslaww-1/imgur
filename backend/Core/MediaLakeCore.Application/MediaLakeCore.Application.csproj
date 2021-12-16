@@ -1,8 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.Specification" Version="5.2.0" />

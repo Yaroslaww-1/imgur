@@ -29,43 +29,40 @@ namespace MediaLakeCore.Application.PostReactions.TogglePostDislike
     {
         private readonly MediaLakeCoreDbContext _dbContext;
         private readonly IUserContext _userContext;
-        private readonly IPostReactionToggler _postReactionsToggler;
+        private readonly PostReactionToggler _postReactionsToggler;
+        private readonly IPostRepository _postRepository;
 
         public TogglePostDislikeCommandHandler(
             MediaLakeCoreDbContext dbContext,
             IUserContext userContext,
-            IPostReactionToggler postReactionsToggler)
+            PostReactionToggler postReactionsToggler,
+            IPostRepository postRepository)
         {
             _dbContext = dbContext;
             _userContext = userContext;
             _postReactionsToggler = postReactionsToggler;
+            _postRepository = postRepository;
         }
 
         public async Task<TogglePostDislikeDto> Handle(TogglePostDislikeCommand request, CancellationToken cancellationToken)
         {
-            var existingPostReaction = await _dbContext.PostReactions
+            var existingReaction = await _dbContext.PostReactions
                 .WithSpecification(new PostReactionAggregateSpecification())
                 .WithSpecification(new PostReactionByPostIdAndCreatedBySpecification(new PostId(request.PostId), new UserId(_userContext.UserId)))
                 .FirstOrDefaultAsync();
 
-            _postReactionsToggler.ToggleDislike(existingPostReaction, new PostId(request.PostId), new UserId(_userContext.UserId));
+            var targetPost = await _postRepository.GetByIdAsync(new PostId(request.PostId));
+
+            var (resultingReaction, resultingPost) = _postReactionsToggler.ToggleDislike(existingReaction, targetPost, new UserId(_userContext.UserId));
 
             await _dbContext.SaveChangesAsync();
 
-            using var connection = _dbContext.Database.GetDbConnection();
-
-            var sql = $@"SELECT * FROM
-                        (SELECT COUNT(*) AS {nameof(TogglePostDislikeDto.LikesCount)} FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = TRUE) AS c1,
-                        (SELECT COUNT(*) AS {nameof(TogglePostDislikeDto.DislikesCount)} FROM post_reaction WHERE post_reaction.post_id = @PostId AND is_like = FALSE) AS c2";
-
-            var likesDislikesCount = await connection.QueryAsync<TogglePostDislikeDto>(
-                sql,
-                new
-                {
-                    PostId = request.PostId
-                });
-
-            return likesDislikesCount.First();
+            return new TogglePostDislikeDto()
+            {
+                LikesCount = resultingPost.LikesCount,
+                DislikesCount = resultingPost.DislikesCount,
+                AuthenticatedUserReaction = resultingReaction != null ? new AuthenticatedUserReactionDto() { IsLike = resultingReaction.IsLike } : null
+            };
         }
     }
 }

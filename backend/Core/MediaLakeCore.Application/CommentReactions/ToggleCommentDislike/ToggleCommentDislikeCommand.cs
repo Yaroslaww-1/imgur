@@ -1,5 +1,4 @@
 ﻿using Ardalis.Specification.EntityFrameworkCore;
-using Dapper;
 using MediaLakeCore.Application.CommentReactions.Specifications;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.Domain.CommentReactions;
@@ -9,7 +8,6 @@ using MediaLakeCore.Infrastructure.EntityFramework;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,20 +25,23 @@ namespace MediaLakeCore.Application.CommentReactions.ToggleCommentDislike
         }
     }
 
-    internal class ToggleCommentLikeCommandHandler : IRequestHandler<ToggleCommentDislikeCommand, ToggleCommentDislikeDto>
+    internal class ToggleCommentDislikeCommandHandler : IRequestHandler<ToggleCommentDislikeCommand, ToggleCommentDislikeDto>
     {
         private readonly MediaLakeCoreDbContext _dbContext;
         private readonly IUserContext _userContext;
-        private readonly ICommentReactionToggler _commentReactionToggler;
+        private readonly CommentReactionToggler _commentReactionToggler;
+        private readonly ICommentRepository _commentRepository;
 
-        public ToggleCommentLikeCommandHandler(
+        public ToggleCommentDislikeCommandHandler(
             MediaLakeCoreDbContext dbContext,
             IUserContext userContext,
-            ICommentReactionToggler commentReactionToggler)
+            CommentReactionToggler commentReactionToggler,
+            ICommentRepository commentRepository)
         {
             _dbContext = dbContext;
             _userContext = userContext;
             _commentReactionToggler = commentReactionToggler;
+            _commentRepository = commentRepository;
         }
 
         public async Task<ToggleCommentDislikeDto> Handle(ToggleCommentDislikeCommand request, CancellationToken cancellationToken)
@@ -50,24 +51,18 @@ namespace MediaLakeCore.Application.CommentReactions.ToggleCommentDislike
                 .WithSpecification(new CommentReactionByCommentIdAndCreatedBySpecification(new CommentId(request.CommentId), new UserId(_userContext.UserId)))
                 .FirstOrDefaultAsync();
 
-            _commentReactionToggler.ToggleDislike(existingReaction, new CommentId(request.CommentId), new UserId(_userContext.UserId));
+            var comment = await _commentRepository.GetByIdAsync(new CommentId(request.CommentId));
+
+            var (resultingReaction, resultingComment) = _commentReactionToggler.ToggleDislike(existingReaction, comment, new UserId(_userContext.UserId));
 
             await _dbContext.SaveChangesAsync();
 
-            using var connection = _dbContext.Database.GetDbConnection();
-
-            var sql = $@"SELECT * FROM
-                        (SELECT COUNT(*) AS {nameof(ToggleCommentDislikeDto.LikesCount)} FROM comment_reaction WHERE comment_reaction.comment_id = @CommentId AND is_like = TRUE) AS c1,
-                        (SELECT COUNT(*) AS {nameof(ToggleCommentDislikeDto.DislikesCount)} FROM comment_reaction WHERE comment_reaction.comment_id = @CommentId AND is_like = FALSE) AS c2";
-
-            var likesDislikesCount = await connection.QueryAsync<ToggleCommentDislikeDto>(
-                sql,
-                new
-                {
-                    CommentId = request.CommentId
-                });
-
-            return likesDislikesCount.First();
+            return new ToggleCommentDislikeDto()
+            {
+                LikesCount = resultingComment.LikesCount,
+                DislikesCount = resultingComment.DislikesCount,
+                AuthenticatedUserReaction = resultingReaction != null ? new AuthenticatedUserReactionDto() { IsLike = resultingReaction.IsLike } : null
+            };
         }
     }
 }
