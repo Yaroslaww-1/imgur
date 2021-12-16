@@ -6,7 +6,7 @@ namespace MediaLakeCore.BuildingBlocks.Domain
     {
         private List<IDomainEvent> _domainEvents;
 
-        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly() ?? new List<IDomainEvent>().AsReadOnly();
 
         public void ClearDomainEvents()
         {

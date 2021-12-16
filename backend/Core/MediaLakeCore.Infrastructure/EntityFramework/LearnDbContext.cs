@@ -7,6 +7,11 @@ using MediaLakeCore.Domain.Communities;
 using MediaLakeCore.Domain.CommunityMember;
 using MediaLakeCore.Domain.CommentReactions;
 using MediaLakeCore.Domain.PostReactions;
+using System.Threading;
+using System.Threading.Tasks;
+using MediaLakeCore.Infrastructure.EventBus.Domain;
+using System.Linq;
+using MediaLakeCore.BuildingBlocks.Domain;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework
 {
@@ -21,15 +26,47 @@ namespace MediaLakeCore.Infrastructure.EntityFramework
         public DbSet<Community> Communities { get; set; }
         public DbSet<CommunityMember> CommunityMembers { get; set; }
 
-        public MediaLakeCoreDbContext() : base() { }
+        private readonly IDomainEventBus _domainEventBus;
 
-        public MediaLakeCoreDbContext(DbContextOptions<MediaLakeCoreDbContext> options) : base(options) { }
+        public MediaLakeCoreDbContext(IDomainEventBus domainEventBus) : base()
+        {
+            _domainEventBus = domainEventBus;
+        }
+
+        public MediaLakeCoreDbContext(
+            DbContextOptions<MediaLakeCoreDbContext> options,
+            IDomainEventBus domainEventBus
+            ) : base(options)
+        {
+            _domainEventBus = domainEventBus;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleEntityConfiguration).Assembly);
+        }
+
+        public override async Task<int> SaveChangesAsync(
+            bool acceptAllChangesOnSuccess,
+            CancellationToken cancellationToken = default)
+        {
+            var changedEntities = ChangeTracker.Entries()
+                .ToList();
+
+            await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+
+            foreach (var changedEntity in changedEntities)
+            {
+                var entityType = changedEntity.Entity.GetType();
+                if (entityType.GetProperty("DomainEvents") != null)
+                {
+                    await _domainEventBus.PublishAllAsync((changedEntity.Entity as Entity).DomainEvents);
+                }
+            }
+
+            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken); ;
         }
     }
 }
