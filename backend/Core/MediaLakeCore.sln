@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLakeCore.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLakeCore.BuildingBlocks", "MediaLakeCore.BuildingBlocks\MediaLakeCore.BuildingBlocks.csproj", "{3979895E-55D5-4D9F-BF8F-E928931E44FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaLakeCore.AWSCDK", "MediaLakeCore.AWSCDK\MediaLakeCore.AWSCDK.csproj", "{2A30D747-6479-4456-98E2-A2FD0B3CECF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3979895E-55D5-4D9F-BF8F-E928931E44FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3979895E-55D5-4D9F-BF8F-E928931E44FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3979895E-55D5-4D9F-BF8F-E928931E44FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A30D747-6479-4456-98E2-A2FD0B3CECF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A30D747-6479-4456-98E2-A2FD0B3CECF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A30D747-6479-4456-98E2-A2FD0B3CECF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A30D747-6479-4456-98E2-A2FD0B3CECF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

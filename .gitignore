@@ -170,3 +170,6 @@ tempkey.jwk
 
 # Vault
 .vault/data
+
+# AWS CDK
+cdk.out

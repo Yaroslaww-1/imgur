@@ -3,6 +3,13 @@ Media Lake is a media content aggregator
 
 # Useful Commands
 
+## AWS Configuration
+
+Application uses AWS CDK. To use it you need to complete following steps:
+1. Configure your AWS Profile and install cdk itself. Please visit [this](https://docs.aws.amazon.com/cdk/v2/guide/work-with.html) link to get more details.
+2. Set `AWSOptions__Environment` environment variable to `YOUR_NAME-local` and override it in docker-compose.yml's `media_lake_core_api` container.
+3. Run `cd ./backend/Core/MediaLakeCore.AWSCDK && cdk deploy`
+
 ## Migrations
 1. Change directory to *backend/Core*
 2. Share your database connection string to env variables:\

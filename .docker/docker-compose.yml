@@ -219,6 +219,7 @@ services:
       - VaultOptions__Token=media_lake_vault
       - VaultOptions__MountPoint=media-lake-vault-core
       - ElasticsearchOptions__ConnectionString=http://media_lake_elastichearch:9200
+      - AWSOptions__Environment=yaroslav-local
   
 volumes:
   media-lake-core-db-data:
