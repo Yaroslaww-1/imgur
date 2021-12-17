@@ -137,6 +137,30 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                     b.ToTable("community_member");
                 });
 
+            modelBuilder.Entity("MediaLakeCore.Domain.PostImages.PostImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_post_image");
+
+                    b.HasIndex("PostId")
+                        .HasDatabaseName("ix_post_image_post_id");
+
+                    b.ToTable("post_image");
+                });
+
             modelBuilder.Entity("MediaLakeCore.Domain.PostReactions.PostReaction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -323,6 +347,36 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_community_member_users_user_id");
+                });
+
+            modelBuilder.Entity("MediaLakeCore.Domain.PostImages.PostImage", b =>
+                {
+                    b.HasOne("MediaLakeCore.Domain.Posts.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .HasConstraintName("fk_post_image_post_post_id");
+
+                    b.OwnsOne("MediaLakeCore.Domain.PostImages.PostImageStatus", "Status", b1 =>
+                        {
+                            b1.Property<Guid>("PostImageId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("text")
+                                .HasColumnName("status_code");
+
+                            b1.HasKey("PostImageId")
+                                .HasName("pk_post_image");
+
+                            b1.ToTable("post_image");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PostImageId")
+                                .HasConstraintName("fk_post_image_post_image_id");
+                        });
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("MediaLakeCore.Domain.PostReactions.PostReaction", b =>

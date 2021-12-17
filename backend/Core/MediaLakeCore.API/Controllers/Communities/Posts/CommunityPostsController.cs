@@ -33,7 +33,7 @@ namespace MediaLakeCore.API.Controllers.Communities.Posts
         [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         public async Task<Guid> Create([FromRoute] Guid communityId, [FromBody] CreatePostRequest request)
         {
-            var result = await _mediator.Send(new CreatePostCommand(communityId, request.Name, request.Content));
+            var result = await _mediator.Send(new CreatePostCommand(communityId, request.Name, request.Content, request.ImagesIds));
             return result;
         }
     }

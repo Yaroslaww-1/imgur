@@ -35,7 +35,7 @@ namespace MediaLakeCore.Domain.Posts
             DislikesCount = 0;
         }
 
-        public static Post CreateNew(CommunityId communityId, string name, string content, User createdBy)
+        internal static Post CreateNew(CommunityId communityId, string name, string content, User createdBy)
         {
             return new Post(communityId, name, content, createdBy);
         }
