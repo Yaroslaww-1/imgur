@@ -1,13 +1,10 @@
 import api from "../api.helper";
 
 import { IPost } from "@models/post.model";
+import { IComment } from "@models/comment.model";
 
 const communitiesEndpoint = "/api/core/communities/";
 const postsEndpoint = "/api/core/posts/";
-
-interface IPosts {
-  posts: IPost[];
-}
 
 export class PostsService {
   static async createPost(
@@ -22,7 +19,7 @@ export class PostsService {
     api.post(communitiesEndpoint + communityId + "/posts", { name, content });
   }
 
-  static async getPosts(communityId: string): Promise<IPosts> {
+  static async getPosts(communityId: string): Promise<IPost[]> {
     return api.get(communitiesEndpoint + communityId + "/posts");
   }
 
@@ -36,5 +33,36 @@ export class PostsService {
 
   static async togglePostDislike(postId: string): Promise<void> {
     return api.post(postsEndpoint + postId + "/reactions/toggleDislike", "");
+  }
+
+  static async getPostComments(postId: string): Promise<IComment[]> {
+    return api.get(postsEndpoint + postId + "/comments");
+  }
+
+  static async createPostComment(
+    postId: string,
+    content: string,
+  ): Promise<IComment[]> {
+    return api.post(postsEndpoint + postId + "/comments", { content });
+  }
+
+  static async toggleCommentLike(
+    postId: string,
+    commentId: string,
+  ): Promise<void> {
+    return api.post(
+      postsEndpoint + postId + "/comments/" + commentId + "/toggleLike",
+      "",
+    );
+  }
+
+  static async toggleCommentDislike(
+    postId: string,
+    commentId: string,
+  ): Promise<void> {
+    return api.post(
+      postsEndpoint + postId + "/comments/" + commentId + "/toggleDislike",
+      "",
+    );
   }
 }
