@@ -1,10 +1,13 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 
 import { PostState } from "../post.state";
+import { AppRoute } from "@common/enums/app-route.enum";
+import { FetchStatus } from "@common/enums/fetch-status.enum";
 
 import { PostComponent } from "../components/post";
+import { Loader } from "@components/loader";
 
 interface IProps {
   state: PostState;
@@ -20,7 +23,22 @@ export const PostContainer: React.FC<IProps> = observer(({ state }) => {
 
   useEffect(() => {
     state.fetchPostById(postId);
+    state.fetchPostComments(postId);
   }, []);
 
-  return <PostComponent post={state.post} />;
+  function updateComments() {
+    state.fetchPostComments(postId);
+  }
+
+  return state.state === FetchStatus.ERROR ? (
+    <Redirect to={AppRoute.HOME} />
+  ) : state.state === FetchStatus.PENDING ? (
+    <Loader />
+  ) : (
+    <PostComponent
+      post={state.post}
+      comments={state.comments}
+      updateComments={updateComments}
+    />
+  );
 });

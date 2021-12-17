@@ -2,13 +2,17 @@ import React from "react";
 
 import { PostsService } from "@api/services/posts.service";
 import { IPost } from "@models/post.model";
+import { IComment } from "@models/comment.model";
 
 import { LikeDislikeComponent } from "../like-dislike";
+import { CommentsSectionComponent } from "../comments-section";
 
 import styles from "./styles.module.scss";
 
 interface IProps {
   post: IPost;
+  comments: IComment[];
+  updateComments: () => void;
 }
 
 export const PostComponent: React.FC<IProps> = props => {
@@ -24,6 +28,9 @@ export const PostComponent: React.FC<IProps> = props => {
     <div className={styles.contentWrapper}>
       <div className={styles.name}>
         <h1>{props.post.name}</h1>
+        <div className={styles.createdBy}>
+          Created by: {props.post.createdBy?.name}
+        </div>
       </div>
       <div className={styles.imageWrapper}>
         <i className={"fa fa-image fa-5x"}></i>
@@ -48,9 +55,11 @@ export const PostComponent: React.FC<IProps> = props => {
           onDislike={toggleDislike}
         />
       )}
-      <div className={styles.commentsCount}>
-        Comments: {props.post.commentsCount}
-      </div>
+      <CommentsSectionComponent
+        postId={props.post.id}
+        comments={props.comments}
+        updateComments={props.updateComments}
+      />
     </div>
   );
 };
