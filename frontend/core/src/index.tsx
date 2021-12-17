@@ -5,7 +5,7 @@ import { createBrowserHistory } from "history";
 
 import { App } from "./App";
 
-import AuthStore from "stores/authStore";
+import AuthStore from "stores/auth.store";
 
 import "./styles/index.scss";
 
