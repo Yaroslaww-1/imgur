@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 
@@ -17,13 +17,13 @@ import { PrivateRoute } from "@components/private-route";
 import { Loader } from "@components/loader";
 
 export const App = observer(() => {
-  const { store } = useContext(Context);
+  const { store: authStore } = useContext(Context);
   const [authenticating, setAuthenticating] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
       setAuthenticating(true);
-      await store.checkAuth();
+      await authStore.checkAuth();
       setAuthenticating(false);
     })();
   }, []);
@@ -37,6 +37,7 @@ export const App = observer(() => {
         <PrivateRoute path={AppRoute.HOME} component={Home} />
         <PrivateRoute path={AppRoute.CREATE_POST} component={CreatePost} />
         <PrivateRoute path={AppRoute.POST} component={Post} />
+        <Redirect to={AppRoute.HOME} />
       </Switch>
     </>
   ) : (

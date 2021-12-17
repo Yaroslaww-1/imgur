@@ -13,12 +13,12 @@ interface IState {
   store: AuthStore;
 }
 
-export const store = new AuthStore();
+export const authStore = new AuthStore();
 
-export const Context = createContext<IState>({ store });
+export const Context = createContext<IState>({ store: authStore });
 
 ReactDOM.render(
-  <Context.Provider value={{ store }}>
+  <Context.Provider value={{ store: authStore }}>
     <React.StrictMode>
       <Router history={createBrowserHistory()}>
         <App />
