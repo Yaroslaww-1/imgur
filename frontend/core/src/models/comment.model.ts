@@ -4,11 +4,9 @@ interface IAuthenticatedUserReaction {
   isLike: boolean;
 }
 
-export interface IPost {
+export interface IComment {
   id: string;
-  name: string;
   content: string;
-  commentsCount: number;
   likesCount: number;
   dislikesCount: number;
   createdBy: IUser;

@@ -17,7 +17,8 @@ export const CreatePost: React.FC = () => {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    PostsService.createPost(name, content, image || "");
+    // TODO: add community selection
+    // PostsService.createPost(name, content, image || "");
   }
 
   function handleFileUpload(newImage: File) {

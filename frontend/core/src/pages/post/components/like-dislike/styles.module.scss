@@ -1,0 +1,18 @@
+$imageSize: 32px;
+
+.contentWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.reaction {
+  font-size: $imageSize / 1.5;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  i {
+    font-size: $imageSize;
+    margin: $imageSize / 4;
+    cursor: pointer;
+  }
+}
