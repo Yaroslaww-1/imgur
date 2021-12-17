@@ -29,4 +29,12 @@ export class PostsService {
   static async getPostById(postId: string): Promise<IPost> {
     return api.get(postsEndpoint + postId);
   }
+
+  static async togglePostLike(postId: string): Promise<void> {
+    return api.post(postsEndpoint + postId + "/reactions/toggleLike", "");
+  }
+
+  static async togglePostDislike(postId: string): Promise<void> {
+    return api.post(postsEndpoint + postId + "/reactions/toggleDislike", "");
+  }
 }
