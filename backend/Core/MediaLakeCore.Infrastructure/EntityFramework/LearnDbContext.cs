@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MediaLakeCore.Infrastructure.EventBus.Domain;
 using System.Linq;
 using MediaLakeCore.BuildingBlocks.Domain;
+using MediaLakeCore.Domain.PostImages;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework
 {
@@ -22,6 +23,7 @@ namespace MediaLakeCore.Infrastructure.EntityFramework
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
+        public DbSet<PostImage> PostImages { get; set; }
         public DbSet<CommentReaction> CommentReactions { get; set; }
         public DbSet<Community> Communities { get; set; }
         public DbSet<CommunityMember> CommunityMembers { get; set; }

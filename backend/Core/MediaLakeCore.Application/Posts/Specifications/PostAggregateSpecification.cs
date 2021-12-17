@@ -8,7 +8,7 @@ namespace MediaLakeCore.Application.Posts.Specifications
         public PostAggregateSpecification()
         {
             base.Query
-                .Include(m => m.CreatedBy);
+                .Include(p => p.CreatedBy);
         }
     }
 }

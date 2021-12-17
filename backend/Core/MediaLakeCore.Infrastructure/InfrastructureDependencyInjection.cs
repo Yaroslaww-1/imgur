@@ -1,3 +1,5 @@
+using Amazon.CDK;
+using MediaLakeCore.BuildingBlocks.Application;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.ExecutionContext;
 using MediaLakeCore.BuildingBlocks.Infrastructure;
@@ -6,9 +8,12 @@ using MediaLakeCore.Domain.CommentReactions;
 using MediaLakeCore.Domain.Comments;
 using MediaLakeCore.Domain.Communities;
 using MediaLakeCore.Domain.CommunityMember;
+using MediaLakeCore.Domain.PostImages;
 using MediaLakeCore.Domain.PostReactions;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Domain.Users;
+using MediaLakeCore.Infrastructure.AWS;
+using MediaLakeCore.Infrastructure.AWS.S3;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories;
 using MediaLakeCore.Infrastructure.EntityFramework.Repositories.Posts;
@@ -39,6 +44,8 @@ namespace MediaLakeCore.Infrastructure
             services.AddOptions(configuration);
             services.AddLogger(configuration);
 
+            services.AddAWS(configuration);
+
             services.AddDomainEventBus();
 
             services.AddDatabaseContext(configuration);
@@ -68,6 +75,8 @@ namespace MediaLakeCore.Infrastructure
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Location));
             services.Configure<UrlsOptions>(configuration.GetSection(UrlsOptions.Location));
             services.Configure<KafkaOptions>(configuration.GetSection(KafkaOptions.Location));
+
+            services.Configure<AWSOptions>(configuration.GetSection(AWSOptions.Location));
 
             services.Configure<LoggerOptions>(configuration.GetSection(LoggerOptions.Location));
             services.Configure<ElasticsearchOptions>(configuration.GetSection(ElasticsearchOptions.Location));
@@ -105,6 +114,7 @@ namespace MediaLakeCore.Infrastructure
             services.AddTransient<ICommentReactionRepository, CommentReactionRepository>();
             services.AddTransient<ICommunityRepository, CommunityRepository>();
             services.AddTransient<ICommunityMemberRepository, CommunityMemberRepository>();
+            services.AddTransient<IPostImageRepository, PostImageRepository>();
         }
 
         private static void AddUserContext(this IServiceCollection services)
@@ -123,6 +133,12 @@ namespace MediaLakeCore.Infrastructure
         private static void AddDomainEventBus(this IServiceCollection services)
         {
             services.AddTransient<IDomainEventBus, MediatrDomainEventBus>();
+        }
+
+        private static void AddAWS(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddTransient<MediaLakeCoreAWSConfiguration, MediaLakeCoreAWSConfiguration>();
+            services.AddTransient<IFileService, AWSS3Service>();
         }
 
         private static void AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)

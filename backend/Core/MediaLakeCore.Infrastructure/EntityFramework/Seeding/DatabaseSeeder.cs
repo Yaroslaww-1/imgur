@@ -1,4 +1,5 @@
 ﻿using MediaLakeCore.Domain.Communities;
+using MediaLakeCore.Domain.PostImages;
 using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Domain.Users;
 using Microsoft.AspNetCore.Builder;
@@ -6,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediaLakeCore.Infrastructure.EntityFramework.Seeding
 {
@@ -95,11 +94,12 @@ namespace MediaLakeCore.Infrastructure.EntityFramework.Seeding
 
 					context.Communities.Add(community);
 
-					var post = Post.CreateNew(
+					var post = new PostCreatorDomainService().CreateNewPost(
 							community.Id,
 							"C# 9.0 is released!",
 							"A lot of new features.",
-							creator);
+							creator,
+							new List<PostImage>());
 
 					context.Posts.Add(post);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MediaLakeCore.Application.Posts.Dtos
 {
@@ -23,5 +24,6 @@ namespace MediaLakeCore.Application.Posts.Dtos
         public int DislikesCount { get; set; }
         public CreatedByDto CreatedBy { get; set; } = null!;
         public AuthenticatedUserReactionDto? AuthenticatedUserReaction { get; set; }
+        public List<string> ImagesUrls { get; set; } = new List<string>();
     }
 }

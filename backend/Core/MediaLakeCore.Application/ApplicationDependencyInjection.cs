@@ -5,6 +5,7 @@ using MediaLakeCore.Application.PostReactions;
 using MediaLakeCore.Application.Users.CreateUser;
 using MediaLakeCore.Domain.CommentReactions;
 using MediaLakeCore.Domain.PostReactions;
+using MediaLakeCore.Domain.Posts;
 using MediaLakeCore.Infrastructure.EventBus.Integration;
 using MediaLakeCore.Infrastructure.EventBus.Integration.Kafka;
 using MediatR;
@@ -52,6 +53,7 @@ namespace MediaLakeCore.Applciation
         {
             services.AddTransient<PostReactionToggler, PostReactionToggler>();
             services.AddTransient<CommentReactionToggler, CommentReactionToggler>();
+            services.AddTransient<PostCreatorDomainService, PostCreatorDomainService>();
         }
     }
 }
