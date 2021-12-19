@@ -11,8 +11,6 @@ namespace MediaLakeCore.Infrastructure.AWS
         public MediaLakeCoreAWSConfiguration(IConfiguration configuration)
         {
             _options = configuration.GetSection(AWSOptions.Location).Get<AWSOptions>();
-
-            AWSConfigs.AWSRegion = _options.Region;
         }
 
         public string GetS3BucketName()

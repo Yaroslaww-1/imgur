@@ -1,3 +1,4 @@
+using Amazon;
 using Amazon.CDK;
 using MediaLakeCore.BuildingBlocks.Application;
 using MediaLakeCore.BuildingBlocks.Application.ExecutionContext;
@@ -137,6 +138,9 @@ namespace MediaLakeCore.Infrastructure
 
         private static void AddAWS(this IServiceCollection services, IConfiguration configuration)
         {
+            var awsOptions = configuration.GetSection(AWSOptions.Location).Get<AWSOptions>();
+            AWSConfigs.AWSRegion = awsOptions.Region;
+
             services.AddTransient<MediaLakeCoreAWSConfiguration, MediaLakeCoreAWSConfiguration>();
             services.AddTransient<IFileService, AWSS3Service>();
         }
