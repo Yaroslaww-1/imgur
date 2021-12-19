@@ -43,7 +43,7 @@ namespace MediaLakeCore.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions(configuration);
-            services.AddLogger(configuration);
+            // services.AddLogger(configuration);
 
             services.AddAWS(configuration);
 
