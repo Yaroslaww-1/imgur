@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using MediaLakeCore.BuildingBlocks.Application;
@@ -18,7 +19,7 @@ namespace MediaLakeCore.Infrastructure.AWS.S3
         {
             _awsConfiguration = awsConfiguration;
 
-            _amazonS3Client = new AmazonS3Client();
+            _amazonS3Client = new AmazonS3Client(RegionEndpoint.GetBySystemName(_awsConfiguration.GetRegion()));
         }
 
         public async Task<string> UploadPublicFileAsync(string fileContentBase64)

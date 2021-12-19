@@ -19,5 +19,10 @@ namespace MediaLakeCore.Infrastructure.AWS
         {
             return $"media-lake-core-{_options.Environment}";
         }
+
+        public string GetRegion()
+        {
+            return _options.Region;
+        }
     }
 }
