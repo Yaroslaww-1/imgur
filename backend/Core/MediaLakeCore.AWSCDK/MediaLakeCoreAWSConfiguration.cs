@@ -2,16 +2,21 @@
 {
     public class MediaLakeCoreAWSConfiguration
     {
-        private readonly string _environment;
+        private readonly AWSOptions _options;
 
-        public MediaLakeCoreAWSConfiguration()
+        public MediaLakeCoreAWSConfiguration(AWSOptions options)
         {
-            _environment = System.Environment.GetEnvironmentVariable("AWSOptions__Environment");
+            _options = options;
         }
 
         public string GetS3BucketName()
         {
-            return $"media-lake-core-{_environment}";
+            return $"media-lake-core-{_options.Environment}";
+        }
+
+        public string GetRegion()
+        {
+            return _options.Region;
         }
     }
 }

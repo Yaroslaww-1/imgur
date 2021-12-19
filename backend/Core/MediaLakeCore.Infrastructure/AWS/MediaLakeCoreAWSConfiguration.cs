@@ -1,4 +1,5 @@
-﻿using MediaLakeCore.BuildingBlocks.Infrastructure.Options;
+﻿using Amazon;
+using MediaLakeCore.BuildingBlocks.Infrastructure.Options;
 using Microsoft.Extensions.Configuration;
 
 namespace MediaLakeCore.Infrastructure.AWS
@@ -10,6 +11,8 @@ namespace MediaLakeCore.Infrastructure.AWS
         public MediaLakeCoreAWSConfiguration(IConfiguration configuration)
         {
             _options = configuration.GetSection(AWSOptions.Location).Get<AWSOptions>();
+
+            AWSConfigs.AWSRegion = _options.Region;
         }
 
         public string GetS3BucketName()

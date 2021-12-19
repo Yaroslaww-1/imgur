@@ -220,6 +220,7 @@ services:
       - VaultOptions__MountPoint=media-lake-vault-core
       - ElasticsearchOptions__ConnectionString=http://media_lake_elastichearch:9200
       - AWSOptions__Environment=yaroslav-local
+      - AWSOptions__Environment=eu-cetral-1
   
 volumes:
   media-lake-core-db-data:

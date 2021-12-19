@@ -1,4 +1,4 @@
-﻿namespace MediaLakeCore.BuildingBlocks.Infrastructure.Options
+﻿namespace MediaLakeCore.AWSCDK
 {
     public class AWSOptions
     {
