@@ -82,7 +82,7 @@ namespace MediaLakeCore.Infrastructure
             services.Configure<LoggerOptions>(configuration.GetSection(LoggerOptions.Location));
             services.Configure<ElasticsearchOptions>(configuration.GetSection(ElasticsearchOptions.Location));
 
-            var accessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+            var accessKey = System.Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
             Console.WriteLine($"XXXXXXXXXXXXXXXXXXXXXXXX ${accessKey}");
         }
 
