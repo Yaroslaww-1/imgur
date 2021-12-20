@@ -15,10 +15,6 @@ export class PostsService {
     image: string,
   ): Promise<void> {
     const imagesIds = [(await ImagesService.uploadImage(image)).id];
-    console.log(imagesIds);
-    // const formData = new FormData();
-    // formData.append("content", content);
-    // formData.append("image", image);
     api.post(communitiesEndpoint + communityId + "/posts", {
       name,
       content,

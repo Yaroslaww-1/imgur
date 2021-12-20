@@ -9,7 +9,6 @@ interface IImage {
 
 export class ImagesService {
   static async uploadImage(content: string): Promise<IImage> {
-    console.log(content);
     return api.post(endpoint, { content });
   }
 }
