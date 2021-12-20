@@ -32,9 +32,13 @@ export const PostComponent: React.FC<IProps> = props => {
           Created by: {props.post.createdBy?.name}
         </div>
       </div>
-      <div className={styles.imageWrapper}>
-        <i className={"fa fa-image fa-5x"}></i>
-      </div>
+      {props.post.imagesUrls && props.post.imagesUrls[0] !== null ? (
+        <div className={styles.imageWrapper}>
+          <img src={props.post.imagesUrls[0]} className={styles.image} />
+        </div>
+      ) : (
+        <div></div>
+      )}
       <div className={styles.content}>{props.post.content}</div>
       {props.post.authenticatedUserReaction === null ? (
         <LikeDislikeComponent
