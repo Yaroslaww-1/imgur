@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import { PostsService } from "@api/services/posts.service";
 
@@ -13,16 +14,30 @@ import styles from "./styles.module.scss";
 export const CreatePost: React.FC = () => {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState<File>();
+  const [image, setImage] = useState("");
+  const history = useHistory();
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // TODO: add community selection
-    // PostsService.createPost(name, content, image || "");
+    // PostsService.createPost(communityId, name, content, image);
+    PostsService.createPost(
+      "11111111-1111-1111-1111-111111111111",
+      name,
+      content,
+      image,
+    ).then(postId => {
+      history.push("/posts/" + postId);
+    });
   }
 
   function handleFileUpload(newImage: File) {
-    setImage(newImage);
+    const reader = new FileReader();
+    reader.readAsDataURL(newImage);
+    reader.onload = () => {
+      if (typeof reader.result === "string")
+        setImage(reader.result.split(",")[1]);
+    };
   }
 
   return (

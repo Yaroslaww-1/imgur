@@ -13,4 +13,5 @@ export interface IPost {
   dislikesCount: number;
   createdBy: IUser;
   authenticatedUserReaction: IAuthenticatedUserReaction | null;
+  imagesUrls: string[];
 }
