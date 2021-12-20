@@ -32,6 +32,7 @@ export const CommentsSectionComponent: React.FC<IProps> = props => {
         <Input
           text={""}
           placeholder={"Add comment:"}
+          required
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setNewComment(e.target.value);
           }}
