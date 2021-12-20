@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { PostsService } from "@api/services/posts.service";
+import { CommunitiesService } from "@api/services/communities.service";
+
+import { ICommunity } from "@models/community.model";
 
 import { Page } from "@components/page";
 import { SimpleButton } from "@components/buttons/simple-button";
 import { ImageUploader } from "@components/image-uploader";
 import { Textarea } from "@components/textarea";
 import { Input } from "@components/input";
+import { CommunitySelect } from "@components/community-selector";
 
 import styles from "./styles.module.scss";
 
@@ -15,18 +19,23 @@ export const CreatePost: React.FC = () => {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
+  const [communityId, setCommunityId] = useState("");
+  const [communities, setCommunities] = useState<ICommunity[]>();
   const history = useHistory();
+
+  useEffect(() => {
+    CommunitiesService.getUserCommunities().then(communities => {
+      setCommunities(communities);
+      if (communities && communities?.length != 0) {
+        setCommunityId(communities[0].id);
+      }
+    });
+  }, []);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO: add community selection
-    // PostsService.createPost(communityId, name, content, image);
-    PostsService.createPost(
-      "11111111-1111-1111-1111-111111111111",
-      name,
-      content,
-      image,
-    ).then(postId => {
+    if ((image === "" && content === "") || communityId === "") return;
+    PostsService.createPost(communityId, name, content, image).then(postId => {
       history.push("/posts/" + postId);
     });
   }
@@ -40,6 +49,10 @@ export const CreatePost: React.FC = () => {
     };
   }
 
+  function onSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+    setCommunityId(e.target.value);
+  }
+
   return (
     <Page>
       <div className={styles.topic}>
@@ -50,12 +63,14 @@ export const CreatePost: React.FC = () => {
           <ImageUploader onUpload={handleFileUpload} />
         </div>
         <div className={styles.contentWrapper}>
+          <CommunitySelect array={communities || []} onSelect={onSelect} />
           <Input
             text={""}
             placeholder={"Name"}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setName(e.target.value);
             }}
+            required
           />
           <Textarea
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
