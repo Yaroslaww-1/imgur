@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import { PostsService } from "@api/services/posts.service";
 
@@ -14,6 +15,7 @@ export const CreatePost: React.FC = () => {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
+  const history = useHistory();
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,7 +26,9 @@ export const CreatePost: React.FC = () => {
       name,
       content,
       image,
-    );
+    ).then(postId => {
+      history.push("/posts/" + postId);
+    });
   }
 
   function handleFileUpload(newImage: File) {
