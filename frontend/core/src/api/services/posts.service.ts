@@ -14,7 +14,10 @@ export class PostsService {
     content: string,
     image: string,
   ): Promise<string> {
-    const imagesIds = [(await ImagesService.uploadImage(image)).id];
+    const imagesIds: string[] = [];
+    if (image !== "") {
+      imagesIds.push((await ImagesService.uploadImage(image)).id);
+    }
     return api.post(communitiesEndpoint + communityId + "/posts", {
       name,
       content,
