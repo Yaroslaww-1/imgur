@@ -1,4 +1,5 @@
 import api from "../api.helper";
+import { ImagesService } from "./images.service";
 
 import { IPost } from "@models/post.model";
 import { IComment } from "@models/comment.model";
@@ -11,12 +12,18 @@ export class PostsService {
     communityId: string,
     name: string,
     content: string,
-    image: File | string,
+    image: string,
   ): Promise<void> {
+    const imagesIds = [(await ImagesService.uploadImage(image)).id];
+    console.log(imagesIds);
     // const formData = new FormData();
     // formData.append("content", content);
     // formData.append("image", image);
-    api.post(communitiesEndpoint + communityId + "/posts", { name, content });
+    api.post(communitiesEndpoint + communityId + "/posts", {
+      name,
+      content,
+      imagesIds,
+    });
   }
 
   static async getPosts(communityId: string): Promise<IPost[]> {
