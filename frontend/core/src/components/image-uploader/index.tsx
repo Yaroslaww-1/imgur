@@ -7,6 +7,7 @@ import downloadSvg from "assets/download.svg";
 
 interface IImageUploader {
   onUpload: (file: File) => void;
+  onDelete: () => void;
   [prop: string]: unknown;
 }
 
@@ -37,6 +38,7 @@ export const ImageUploader: React.FC<IImageUploader> = props => {
     hiddenFileInput.current!.value = "";
     setObjectUrl("");
     setPreview(false);
+    props.onDelete();
   }
 
   return (

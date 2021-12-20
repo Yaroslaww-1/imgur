@@ -40,6 +40,10 @@ export const CreatePost: React.FC = () => {
     });
   }
 
+  function handleFileDeletion() {
+    setImage("");
+  }
+
   function handleFileUpload(newImage: File) {
     const reader = new FileReader();
     reader.readAsDataURL(newImage);
@@ -60,7 +64,10 @@ export const CreatePost: React.FC = () => {
       </div>
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.imageUploaderWrapper}>
-          <ImageUploader onUpload={handleFileUpload} />
+          <ImageUploader
+            onUpload={handleFileUpload}
+            onDelete={handleFileDeletion}
+          />
         </div>
         <div className={styles.contentWrapper}>
           <CommunitySelect array={communities || []} onSelect={onSelect} />
