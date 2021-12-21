@@ -14,7 +14,10 @@ export class PostsService {
     content: string,
     image: string,
   ): Promise<string> {
-    const imagesIds = [(await ImagesService.uploadImage(image)).id];
+    const imagesIds: string[] = [];
+    if (image !== "") {
+      imagesIds.push((await ImagesService.uploadImage(image)).id);
+    }
     return api.post(communitiesEndpoint + communityId + "/posts", {
       name,
       content,
@@ -22,8 +25,12 @@ export class PostsService {
     });
   }
 
-  static async getPosts(communityId: string): Promise<IPost[]> {
+  static async getCommunityPosts(communityId: string): Promise<IPost[]> {
     return api.get(communitiesEndpoint + communityId + "/posts");
+  }
+
+  static async getAllPosts(): Promise<IPost[]> {
+    return api.get(postsEndpoint + "authenticatedUser");
   }
 
   static async getPostById(postId: string): Promise<IPost> {

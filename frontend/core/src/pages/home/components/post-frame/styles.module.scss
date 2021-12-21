@@ -1,0 +1,37 @@
+.postFrame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  margin: 20px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.name {
+  text-align: center;
+  font-size: 36px;
+}
+
+.createdBy {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 15px;
+}
+
+.imageWrapper {
+  max-height: 620px;
+  max-width: 750px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+}
+
+.image {
+  max-height: 620px;
+  max-width: 750px;
+}
+
+.content {
+  width: 750px;
+}
