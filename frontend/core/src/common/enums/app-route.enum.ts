@@ -5,4 +5,5 @@ export enum AppRoute {
   HOME = "/home",
   COMMUNITY = "/communities/:communityId",
   POST = "/posts/:postId",
+  USER_PROFILE = "/profile"
 }
