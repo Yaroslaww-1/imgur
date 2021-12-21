@@ -25,8 +25,12 @@ export class PostsService {
     });
   }
 
-  static async getPosts(communityId: string): Promise<IPost[]> {
+  static async getCommunityPosts(communityId: string): Promise<IPost[]> {
     return api.get(communitiesEndpoint + communityId + "/posts");
+  }
+
+  static async getAllPosts(): Promise<IPost[]> {
+    return api.get(postsEndpoint + "authenticatedUser");
   }
 
   static async getPostById(postId: string): Promise<IPost> {
