@@ -8,4 +8,8 @@ export class CommunitiesService {
   static async getUserCommunities(): Promise<ICommunity[]> {
     return api.get(endpoint);
   }
+
+  // static async getCommunity(communityId: string): Promise<ICommunity> {
+  //   return api.get();
+  // }
 }
