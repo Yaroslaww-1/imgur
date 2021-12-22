@@ -5,6 +5,13 @@ import { ICommunity } from "@models/community.model";
 const endpoint = "/api/core/communities";
 
 export class CommunitiesService {
+  static async createCommunity(
+    name: string,
+    description: string,
+  ): Promise<string> {
+    return api.post(endpoint, { name, description });
+  }
+
   static async getUserCommunities(): Promise<ICommunity[]> {
     return api.get(endpoint + "/authenticatedUser");
   }
