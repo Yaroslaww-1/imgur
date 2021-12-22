@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
 
 import { ICommunity } from "@models/community.model";
 
@@ -8,20 +9,42 @@ import { SimpleButton } from "@components/buttons/simple-button";
 interface IProps {
   community: ICommunity;
   subscribed: boolean;
+  handleJoinClick: (communityId: string) => void;
+  handleLeaveClick: (communityId: string) => void;
 }
 
-export const CommunityItem: React.FC<IProps> = ({ community, subscribed }) => {
+export const CommunityItem: React.FC<IProps> = props => {
+  const history = useHistory();
+
+  function redirectToCommunity() {
+    history.push("/communities/" + props.community.id);
+  }
+
   return (
     <div className={styles.item}>
       <div>
-        <div className={styles.name}>{community.name}</div>
-        <div className={styles.description}>{community.description}</div>
+        <div className={styles.name} onClick={redirectToCommunity}>
+          {props.community.name}
+        </div>
+        <div className={styles.description}>{props.community.description}</div>
       </div>
       <div className={styles.subscribe}>
-        {subscribed ? (
-          <SimpleButton text={"Unsubscribe"} size={"small"} />
+        {props.subscribed ? (
+          <SimpleButton
+            text={"Leave"}
+            size={"small"}
+            onClick={() => {
+              props.handleLeaveClick(props.community.id);
+            }}
+          />
         ) : (
-          <SimpleButton text={"Subscribe"} size={"small"} />
+          <SimpleButton
+            text={"Join"}
+            size={"small"}
+            onClick={() => {
+              props.handleJoinClick(props.community.id);
+            }}
+          />
         )}
       </div>
     </div>

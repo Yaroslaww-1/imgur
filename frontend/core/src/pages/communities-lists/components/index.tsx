@@ -14,13 +14,29 @@ export const CommunitiesLists: React.FC = () => {
   const [allCommunities, setAllCommunities] = useState<ICommunity[]>();
 
   useEffect(() => {
+    getCommunities();
+  }, [userCommunities]);
+
+  function getCommunities() {
     CommunitiesService.getAllCommunities().then(communities => {
       setAllCommunities(communities);
     });
     CommunitiesService.getUserCommunities().then(communities => {
       setUserCommunities(communities);
     });
-  }, []);
+  }
+
+  function join(communityId: string) {
+    CommunitiesService.joinCommunity(communityId).then(() => {
+      getCommunities();
+    });
+  }
+
+  function leave(communityId: string) {
+    CommunitiesService.leaveCommunity(communityId).then(() => {
+      getCommunities();
+    });
+  }
 
   if (userCommunitiesSwitcher) {
     return (
@@ -47,6 +63,8 @@ export const CommunitiesLists: React.FC = () => {
             key={community.id}
             community={community}
             subscribed={true}
+            handleJoinClick={join}
+            handleLeaveClick={leave}
           />
         ))}
       </Page>
@@ -71,13 +89,19 @@ export const CommunitiesLists: React.FC = () => {
             </label>
           </div>
         </div>
-        {userCommunities?.map(community => (
-          <CommunityItem
-            key={community.id}
-            community={community}
-            subscribed={false}
-          />
-        ))}
+        {allCommunities?.map(community =>
+          !community.isAuthenticatedUserJoined ? (
+            <CommunityItem
+              key={community.id}
+              community={community}
+              subscribed={false}
+              handleJoinClick={join}
+              handleLeaveClick={leave}
+            />
+          ) : (
+            <></>
+          ),
+        )}
       </Page>
     );
   }
