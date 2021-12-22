@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MediaLakeCore.Application.Communities.GetCommunityById
+namespace MediaLakeCore.Application.Communities.GetAuthenticatedUserCommunities
 {
     public class CreatedByDto
     {
@@ -8,13 +8,12 @@ namespace MediaLakeCore.Application.Communities.GetCommunityById
         public string Name { get; set; }
     }
 
-    public class CommunityByIdDto
+    public class AuthenticatedUserCommunitiesListItemDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int MembersCount { get; set; }
-        public bool IsAuthenticatedUserJoined { get; set; }
         public CreatedByDto CreatedBy { get; set; } = null!;
     }
 }

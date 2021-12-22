@@ -33,8 +33,8 @@ namespace MediaLakeCore.API.Controllers.Communities
         }
 
         [HttpGet("authenticatedUser")]
-        [ProducesResponseType(typeof(IEnumerable<CommunitiesListItemDto>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<CommunitiesListItemDto>> GetAuthenticatedUserList()
+        [ProducesResponseType(typeof(IEnumerable<AuthenticatedUserCommunitiesListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<AuthenticatedUserCommunitiesListItemDto>> GetAuthenticatedUserList()
         {
             var result = await _mediator.Send(new GetAuthenticatedUserCommunitiesQuery());
             return result;

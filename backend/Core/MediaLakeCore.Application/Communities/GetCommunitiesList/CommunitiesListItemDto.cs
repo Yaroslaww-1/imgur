@@ -2,7 +2,7 @@
 
 namespace MediaLakeCore.Application.Communities.GetCommunitiesList
 {
-    public class CommunitiesListItemCreatedByDto
+    public class CreatedByDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -14,6 +14,7 @@ namespace MediaLakeCore.Application.Communities.GetCommunitiesList
         public string Name { get; set; }
         public string Description { get; set; }
         public int MembersCount { get; set; }
-        public CommunitiesListItemCreatedByDto CreatedBy { get; set; } = null!;
+        public bool IsAuthenticatedUserJoined { get; set; }
+        public CreatedByDto CreatedBy { get; set; } = null!;
     }
 }
