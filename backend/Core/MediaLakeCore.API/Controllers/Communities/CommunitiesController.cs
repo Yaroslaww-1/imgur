@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediaLakeCore.Application.Communities.GetCommunityById;
 
 namespace MediaLakeCore.API.Controllers.Communities
 {
@@ -32,10 +33,18 @@ namespace MediaLakeCore.API.Controllers.Communities
         }
 
         [HttpGet("authenticatedUser")]
-        [ProducesResponseType(typeof(IEnumerable<CommunitiesListItemDto>), StatusCodes.Status200OK)]
-        public async Task<IEnumerable<CommunitiesListItemDto>> GetAuthenticatedUserList()
+        [ProducesResponseType(typeof(IEnumerable<AuthenticatedUserCommunitiesListItemDto>), StatusCodes.Status200OK)]
+        public async Task<IEnumerable<AuthenticatedUserCommunitiesListItemDto>> GetAuthenticatedUserList()
         {
             var result = await _mediator.Send(new GetAuthenticatedUserCommunitiesQuery());
+            return result;
+        }
+        
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(CommunityByIdDto), StatusCodes.Status200OK)]
+        public async Task<CommunityByIdDto> GetById([FromRoute] Guid id)
+        {
+            var result = await _mediator.Send(new GetCommunityByIdQuery(id));
             return result;
         }
 
