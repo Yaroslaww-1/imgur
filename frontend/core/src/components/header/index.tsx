@@ -14,6 +14,10 @@ export const Header: React.FC = () => {
     history.push(AppRoute.CREATE_POST);
   }
 
+  function toCommunities() {
+    history.push(AppRoute.COMMUNITIES_LIST);
+  }
+
   function toUserProfile() {
     history.push(AppRoute.USER_PROFILE);
   }
@@ -46,8 +50,11 @@ export const Header: React.FC = () => {
           >
             <i className="fa fa-user"></i>
           </div>
-          <div className={`${styles.icon} ${styles.iconFill}`}>
-            <i className="fa fa-bars"></i>
+          <div
+            className={`${styles.icon} ${styles.iconFill}`}
+            onClick={toCommunities}
+          >
+            <i className="fa fa-code-fork"></i>
           </div>
           <div className={`${styles.icon} ${styles.iconFill}`} onClick={logout}>
             <i className="fa fa-sign-out"></i>

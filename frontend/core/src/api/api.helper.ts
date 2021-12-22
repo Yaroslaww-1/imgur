@@ -88,12 +88,13 @@ class Api {
     url: string,
     payload: Payload,
   ): Promise<Response> {
-    const response = await this.instance
+    let response = await this.instance
       .post(url, payload, {
         headers: this.commonHeaders,
       })
       .then(({ data }) => data)
       .catch(this.handleError);
+    if (response === "") response = "true";
     return this.validateAndReturnResponse<Response>(response);
   }
 
