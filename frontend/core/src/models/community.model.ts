@@ -5,5 +5,6 @@ export interface ICommunity {
   name: string;
   description: string;
   membersCount: number;
+  isAuthenticatedUserJoined: boolean;
   createdBy: IUser;
 }

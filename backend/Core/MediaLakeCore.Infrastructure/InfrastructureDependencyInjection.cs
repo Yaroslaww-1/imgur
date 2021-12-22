@@ -43,7 +43,7 @@ namespace MediaLakeCore.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions(configuration);
-            // services.AddLogger(configuration);
+            services.AddLogger(configuration);
 
             services.AddAWS(configuration);
 
@@ -81,9 +81,6 @@ namespace MediaLakeCore.Infrastructure
 
             services.Configure<LoggerOptions>(configuration.GetSection(LoggerOptions.Location));
             services.Configure<ElasticsearchOptions>(configuration.GetSection(ElasticsearchOptions.Location));
-
-            var accessKey = System.Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-            Console.WriteLine($"XXXXXXXXXXXXXXXXXXXXXXXX ${accessKey}");
         }
 
         private static void AddLogger(this IServiceCollection services, IConfiguration configuration)
