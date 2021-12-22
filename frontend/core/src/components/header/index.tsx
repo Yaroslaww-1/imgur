@@ -14,6 +14,10 @@ export const Header: React.FC = () => {
     history.push(AppRoute.CREATE_POST);
   }
 
+  function toCommunityCreation() {
+    history.push(AppRoute.CREATE_COMMUNITY);
+  }
+
   function toCommunities() {
     history.push(AppRoute.COMMUNITIES_LIST);
   }
@@ -43,6 +47,12 @@ export const Header: React.FC = () => {
             onClick={toPostCreation}
           >
             <i className="fa fa-plus"></i>
+          </div>
+          <div
+            className={`${styles.icon} ${styles.iconFill}`}
+            onClick={toCommunityCreation}
+          >
+            <i className="fa fa-user-plus"></i>
           </div>
           <div
             className={`${styles.icon} ${styles.iconFill}`}

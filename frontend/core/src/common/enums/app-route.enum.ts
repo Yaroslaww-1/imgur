@@ -7,4 +7,5 @@ export enum AppRoute {
   POST = "/posts/:postId",
   USER_PROFILE = "/profile",
   COMMUNITIES_LIST = "/communities-list",
+  CREATE_COMMUNITY = "/create-community",
 }
