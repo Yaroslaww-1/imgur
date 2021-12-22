@@ -65,7 +65,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
                 }
                 catch (ConsumeException e)
                 {
-                    _logger.LogError($"Error occured: {e.Error.Reason}");
+                    _logger.LogError($"Kafka consume fatal error occured: {e.Error.Reason}");
 
                     if (e.Error.IsFatal)
                     {
@@ -75,8 +75,7 @@ namespace MediaLakeCore.Infrastructure.EventBus.Integration.Kafka
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError($"Error occured: {e}");
-                    break;
+                    _logger.LogError($"Kafka confume error occured: {e}");
                 }
             }
         }
