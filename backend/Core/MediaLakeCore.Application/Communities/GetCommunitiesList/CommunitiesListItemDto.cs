@@ -14,6 +14,6 @@ namespace MediaLakeCore.Application.Communities.GetCommunitiesList
         public string Name { get; set; }
         public string Description { get; set; }
         public int MembersCount { get; set; }
-        public CommunitiesListItemCreatedByDto CreatedBy { get; set; }
+        public CommunitiesListItemCreatedByDto CreatedBy { get; set; } = null!;
     }
 }
