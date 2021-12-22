@@ -14,6 +14,10 @@ export const Header: React.FC = () => {
     history.push(AppRoute.CREATE_POST);
   }
 
+  function toUserProfile() {
+    history.push(AppRoute.USER_PROFILE);
+  }
+
   function toHome() {
     history.push(AppRoute.HOME);
   }
@@ -36,7 +40,10 @@ export const Header: React.FC = () => {
           >
             <i className="fa fa-plus"></i>
           </div>
-          <div className={`${styles.icon} ${styles.iconFill}`}>
+          <div
+            className={`${styles.icon} ${styles.iconFill}`}
+            onClick={toUserProfile}
+          >
             <i className="fa fa-user"></i>
           </div>
           <div className={`${styles.icon} ${styles.iconFill}`}>

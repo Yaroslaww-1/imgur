@@ -1,16 +1,14 @@
 import React from "react";
 
-import { Page } from "@components/page";
+import { postsState } from "./posts.state";
 
-import styles from "./styles.module.scss";
+import { Page } from "@components/page";
+import { PostsList } from "./components/post-list";
 
 export const Home: React.FC = () => {
   return (
     <Page>
-      <div>
-        <h1>Home</h1>
-        <p>(posts in future)</p>
-      </div>
+      <PostsList state={postsState} />
     </Page>
   );
 };
