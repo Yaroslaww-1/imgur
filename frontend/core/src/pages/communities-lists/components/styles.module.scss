@@ -1,0 +1,67 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+  width: 60%;
+  transform: translateY(5%);
+}
+
+label,
+.toggle {
+  height: 5rem;
+  border-radius: 100px;
+}
+label {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 100px;
+  position: relative;
+  margin: 1.8rem 0 2rem 0;
+  cursor: pointer;
+}
+.toggle {
+  position: absolute;
+  width: 50%;
+  background-color: black;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.names {
+  font-size: 90%;
+  font-weight: bolder;
+  width: 65%;
+  margin-left: 17.5%;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.first {
+  color: white;
+  opacity: 1;
+  font-size: 24px;
+}
+
+.second {
+  color: black;
+  opacity: 0.5;
+  font-size: 24px;
+}
+
+[type="checkbox"] {
+  display: none;
+}
+
+[type="checkbox"]:checked + .app .toggle {
+  transform: translateX(100%);
+}
+[type="checkbox"]:checked + .app .second {
+  opacity: 1;
+  color: white;
+}
+[type="checkbox"]:checked + .app .first {
+  opacity: 0.5;
+  color: black;
+}
