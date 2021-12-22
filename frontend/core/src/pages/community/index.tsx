@@ -1,14 +1,17 @@
 import React from "react";
 
-import { postsState } from "./community.state";
+import { communityState } from "./community.state";
+
+import { PostsList } from "./post-list";
+import { CommunityDetails } from "./community-details";
 
 import { Page } from "@components/page";
-import { PostsList } from "./post-list";
 
 export const Community: React.FC = () => {
   return (
     <Page>
-      <PostsList state={postsState} />
+      <CommunityDetails state={communityState} />
+      <PostsList state={communityState} />
     </Page>
   );
 };

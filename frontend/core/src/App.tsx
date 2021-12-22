@@ -13,6 +13,7 @@ import { CreatePost } from "pages/create-post";
 import { Post } from "pages/post";
 import { UserProfile } from "pages/user-profile";
 import { CommunitiesLists } from "pages/communities-lists/components";
+import { Community } from "pages/community";
 
 import { Header } from "@components/header";
 import { PrivateRoute } from "@components/private-route";
@@ -44,6 +45,7 @@ export const App = observer(() => {
           path={AppRoute.COMMUNITIES_LIST}
           component={CommunitiesLists}
         />
+        <PrivateRoute path={AppRoute.COMMUNITY} component={Community} />
         <Redirect to={AppRoute.HOME} />
       </Switch>
     </>

@@ -25,6 +25,7 @@ export const PostsList: React.FC<IProps> = observer(({ state }) => {
 
   return (
     <div className={styles.list}>
+      <div className={styles.header}>Posts</div>
       {state.posts.map(post => (
         <PostFrame key={post.id} post={post} />
       ))}

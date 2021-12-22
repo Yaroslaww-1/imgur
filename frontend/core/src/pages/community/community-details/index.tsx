@@ -14,7 +14,7 @@ interface IUrlParams {
   communityId: string;
 }
 
-export const PostsList: React.FC<IProps> = observer(({ state }) => {
+export const CommunityDetails: React.FC<IProps> = observer(({ state }) => {
   const { communityId } = useParams<IUrlParams>();
 
   useEffect(() => {
@@ -27,10 +27,16 @@ export const PostsList: React.FC<IProps> = observer(({ state }) => {
         <i className="fa fa-users fa-6"></i>
       </div>
       <div className={styles.info}>
-        <div className={styles.label}>{state.community.name}</div>
-        <div className={styles.label}>{state.community.description}</div>
-        <div className={styles.label}>{state.community.membersCount}</div>
-        <div className={styles.createdBy}>{state.community.createdBy.name}</div>
+        <div className={styles.label}>Name: {state.community.name}</div>
+        <div className={styles.label}>
+          Description: {state.community.description}
+        </div>
+        <div className={styles.label}>
+          Members: {state.community.membersCount}
+        </div>
+        <div className={styles.createdBy}>
+          CreatedBy: {state.community.createdBy?.name}
+        </div>
       </div>
     </div>
   );

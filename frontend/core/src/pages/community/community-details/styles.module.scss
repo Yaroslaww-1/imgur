@@ -1,4 +1,9 @@
 .details {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .imageWrapper {
@@ -19,4 +24,5 @@
 .createdBy {
   font-size: 14px;
   color: gray;
+  padding: 10px;
 }
