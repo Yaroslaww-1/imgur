@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using MediaLakeCore.Application.Communities.GetCommunitiesList;
 using MediaLakeCore.Infrastructure.EntityFramework;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +36,7 @@ namespace MediaLakeCore.Application.Communities.GetCommunityById
                         community.id AS {nameof(CommunityByIdDto.Id)},
                         community.name AS {nameof(CommunityByIdDto.Name)},
                         community.description AS {nameof(CommunityByIdDto.Description)},
-                        (SELECT COUNT(*) FROM community_member WHERE community_member.community_id = community.id) AS {nameof(CommunitiesListItemDto.MembersCount)},
+                        (SELECT COUNT(*) FROM community_member WHERE community_member.community_id = community.id) AS {nameof(CommunityByIdDto.MembersCount)},
                         u.id AS {nameof(CommunityByIdDto.Id)},
                         u.name AS {nameof(CommunityByIdDto.Name)}
                         FROM community
