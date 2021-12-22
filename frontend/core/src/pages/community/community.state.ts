@@ -19,9 +19,9 @@ export class CommunityState {
   async fetchCommunity(communityId: string) {
     this.state = FetchStatus.PENDING;
     try {
-      const posts = await CommunitiesService.getCommunity(communityId);
+      const community = await CommunitiesService.getCommunityById(communityId);
       runInAction(() => {
-        this.posts = posts;
+        this.community = community;
         this.state = FetchStatus.DONE;
       });
     } catch (e) {
@@ -47,4 +47,4 @@ export class CommunityState {
   }
 }
 
-export const postsState = new CommunityState();
+export const communityState = new CommunityState();

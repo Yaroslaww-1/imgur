@@ -53,7 +53,7 @@ export const CommunitiesLists: React.FC = () => {
               <div className={styles.toggle}></div>
               <div className={styles.names}>
                 <p className={styles.first}>My communities</p>
-                <p className={styles.second}>All communities</p>
+                <p className={styles.second}>Other communities</p>
               </div>
             </label>
           </div>
@@ -84,7 +84,7 @@ export const CommunitiesLists: React.FC = () => {
               <div className={styles.toggle}></div>
               <div className={styles.names}>
                 <p className={styles.first}>My communities</p>
-                <p className={styles.second}>All communities</p>
+                <p className={styles.second}>Other communities</p>
               </div>
             </label>
           </div>
