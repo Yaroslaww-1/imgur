@@ -5,21 +5,24 @@
   text-align: center;
   width: 60%;
   transform: translateY(5%);
+
+  label {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 100px;
+    position: relative;
+    margin: 1.8rem 0 2rem 0;
+    cursor: pointer;
+    height: 5rem;
+    border-radius: 100px;
+  }
 }
 
-label,
 .toggle {
   height: 5rem;
   border-radius: 100px;
 }
-label {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 100px;
-  position: relative;
-  margin: 1.8rem 0 2rem 0;
-  cursor: pointer;
-}
+
 .toggle {
   position: absolute;
   width: 50%;
