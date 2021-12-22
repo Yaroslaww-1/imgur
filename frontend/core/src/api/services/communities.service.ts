@@ -12,4 +12,12 @@ export class CommunitiesService {
   static async getAllCommunities(): Promise<ICommunity[]> {
     return api.get(endpoint);
   }
+
+  static async joinCommunity(communityId: string): Promise<void> {
+    api.post(endpoint + "/" + communityId + "/join", "");
+  }
+
+  static async leaveCommunity(communityId: string): Promise<void> {
+    api.post(endpoint + "/" + communityId + "/leave", "");
+  }
 }
