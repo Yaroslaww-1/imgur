@@ -13,9 +13,9 @@ export class CommunitiesService {
     return api.get(endpoint);
   }
 
-  // static async getCommunity(communityId: string): Promise<ICommunity> {
-  //   return api.get();
-  // }
+  static async getCommunityById(communityId: string): Promise<ICommunity> {
+    return api.get(endpoint + "/" + communityId);
+  }
 
   static async joinCommunity(communityId: string): Promise<void> {
     api.post(endpoint + "/" + communityId + "/join", "");
