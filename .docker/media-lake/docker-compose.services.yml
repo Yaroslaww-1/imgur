@@ -92,7 +92,7 @@ services:
     networks:
       - media-lake-vault-network
     volumes:
-      - ../.vault:/.vault
+      - ../../.vault:/.vault
 
   media_lake_vault_core_seeder:
     image: vault:1.6.1
@@ -152,7 +152,7 @@ services:
   media_lake_gateway_api:
     container_name: media_lake_gateway_api
     build: 
-      context: ../backend/GatewayApi
+      context: ../../backend/GatewayApi
     depends_on:
       - media_lake_elastichearch
     restart: on-failure
@@ -173,7 +173,7 @@ services:
   media_lake_users_api:
     container_name: media_lake_users_api
     build: 
-      context: ../backend/Users
+      context: ../../backend/Users
     restart: on-failure
     depends_on:
       - media_lake_kafka
