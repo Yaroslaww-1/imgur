@@ -14,27 +14,33 @@ export const CommunitiesLists: React.FC = () => {
   const [allCommunities, setAllCommunities] = useState<ICommunity[]>();
 
   useEffect(() => {
-    getCommunities();
-  }, [userCommunities]);
-
-  function getCommunities() {
     CommunitiesService.getAllCommunities().then(communities => {
-      setAllCommunities(communities);
+      setAllCommunities(
+        communities.filter(com => com.isAuthenticatedUserJoined !== true),
+      );
     });
     CommunitiesService.getUserCommunities().then(communities => {
       setUserCommunities(communities);
     });
-  }
+  }, []);
 
-  function join(communityId: string) {
-    CommunitiesService.joinCommunity(communityId).then(() => {
-      getCommunities();
+  function join(community: ICommunity) {
+    CommunitiesService.joinCommunity(community.id).then(() => {
+      setUserCommunities([...(userCommunities || []), community]);
+      const newAllCommunities = allCommunities?.filter(
+        com => com !== community,
+      );
+      setAllCommunities(newAllCommunities);
     });
   }
 
-  function leave(communityId: string) {
-    CommunitiesService.leaveCommunity(communityId).then(() => {
-      getCommunities();
+  function leave(community: ICommunity) {
+    CommunitiesService.leaveCommunity(community.id).then(() => {
+      setAllCommunities([...(allCommunities || []), community]);
+      const newUserCommunities = userCommunities?.filter(
+        com => com !== community,
+      );
+      setUserCommunities(newUserCommunities);
     });
   }
 

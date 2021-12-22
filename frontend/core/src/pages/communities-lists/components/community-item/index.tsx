@@ -9,8 +9,8 @@ import { SimpleButton } from "@components/buttons/simple-button";
 interface IProps {
   community: ICommunity;
   subscribed: boolean;
-  handleJoinClick: (communityId: string) => void;
-  handleLeaveClick: (communityId: string) => void;
+  handleJoinClick: (community: ICommunity) => void;
+  handleLeaveClick: (community: ICommunity) => void;
 }
 
 export const CommunityItem: React.FC<IProps> = props => {
@@ -34,7 +34,7 @@ export const CommunityItem: React.FC<IProps> = props => {
             text={"Leave"}
             size={"small"}
             onClick={() => {
-              props.handleLeaveClick(props.community.id);
+              props.handleLeaveClick(props.community);
             }}
           />
         ) : (
@@ -42,7 +42,7 @@ export const CommunityItem: React.FC<IProps> = props => {
             text={"Join"}
             size={"small"}
             onClick={() => {
-              props.handleJoinClick(props.community.id);
+              props.handleJoinClick(props.community);
             }}
           />
         )}
