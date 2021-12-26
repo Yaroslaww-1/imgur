@@ -1,6 +1,10 @@
 # Media Lake
 Media Lake is a media content aggregator
 
+# Architecture
+
+![image](https://user-images.githubusercontent.com/40521835/147410912-b3ca487a-1260-4327-96c5-0838ad49abcf.png)
+
 # Useful Commands
 
 ## AWS Configuration
