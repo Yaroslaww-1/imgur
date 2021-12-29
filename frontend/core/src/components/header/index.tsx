@@ -26,6 +26,13 @@ export const Header: React.FC = () => {
     history.push(AppRoute.USER_PROFILE);
   }
 
+  function toChat() {
+    if (localStorage.getItem("accessToken")) {
+      window.location.href =
+        "http://localhost:3001/?token=" + localStorage.getItem("accessToken");
+    }
+  }
+
   function toHome() {
     history.push(AppRoute.HOME);
   }
@@ -65,6 +72,9 @@ export const Header: React.FC = () => {
             onClick={toCommunities}
           >
             <i className="fa fa-code-fork"></i>
+          </div>
+          <div className={`${styles.icon} ${styles.iconFill}`} onClick={toChat}>
+            <i className="fa fa-comments"></i>
           </div>
           <div className={`${styles.icon} ${styles.iconFill}`} onClick={logout}>
             <i className="fa fa-sign-out"></i>
